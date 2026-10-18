@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import Image from "next/image";
 import { useTheme } from "next-themes";
 import { USER_TEAM_NAME } from "@/lib/constants";
 import { formatRand } from "@/lib/format";
@@ -20,14 +21,24 @@ export function Header({ remaining, spotsLeft }: HeaderProps) {
     <header className="sticky top-0 z-50 border-b border-zinc-200/80 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80">
       <div className="mx-auto max-w-4xl px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-5 sm:px-6 lg:px-8">
         <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
-              Team Padel Premier
-            </p>
-            <h1 className="mt-1 text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-              {USER_TEAM_NAME}
-            </h1>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">Live auction desk</p>
+          <div className="flex items-center gap-3">
+            <Image
+              src="/bajada-logo.png"
+              alt=""
+              width={56}
+              height={56}
+              priority
+              className="size-14 shrink-0"
+            />
+            <div>
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
+                Team Padel Premier
+              </p>
+              <h1 className="mt-1 text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+                {USER_TEAM_NAME}
+              </h1>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">Live auction desk</p>
+            </div>
           </div>
           <ThemeToggle />
         </div>
