@@ -1,0 +1,522 @@
+{
+  "teams": [
+    {
+      "id": "bajada-batallions",
+      "name": "Bajada Batallions",
+      "isUser": true,
+      "spent": 279800,
+      "remaining": 370200,
+      "spotsLeft": 6,
+      "roster": [
+        {
+          "name": "Mohammed Wajoodeen",
+          "level": 4.5,
+          "price": 55000,
+          "retained": true,
+          "side": "Left"
+        },
+        {
+          "name": "Ahmed Ghaff",
+          "level": 3.28,
+          "price": 42800,
+          "retained": true,
+          "side": "Right"
+        },
+        {
+          "name": "Morgan Booysen",
+          "level": 3.63,
+          "price": 46300,
+          "retained": true,
+          "side": "Right"
+        },
+        {
+          "name": "Mohammed Rawat",
+          "level": 2.74,
+          "price": 37400,
+          "retained": true,
+          "side": "Left"
+        },
+        {
+          "name": "Zaid Jacobs",
+          "level": 3.33,
+          "price": 43300,
+          "retained": true,
+          "side": "Left"
+        },
+        {
+          "name": "Abdurrahmaan Omar",
+          "level": 2.55,
+          "price": 55000,
+          "retained": false,
+          "side": "Unknown"
+        }
+      ],
+      "formation": {
+        "pair1": {
+          "right": "Ahmed Ghaff",
+          "left": "Mohammed Wajoodeen"
+        },
+        "pair2": {
+          "right": "Morgan Booysen",
+          "left": "Mohammed Rawat"
+        },
+        "pair3": {
+          "right": "Abdullah Ali",
+          "left": "Zaid Jacobs"
+        },
+        "pair4": {
+          "right": "Muhammed Zaid Ally",
+          "left": "Salmaan Beg"
+        },
+        "pair5": {
+          "right": null,
+          "left": null
+        },
+        "pair6": {
+          "right": null,
+          "left": null
+        }
+      }
+    },
+    {
+      "id": "assassins",
+      "name": "Assassins",
+      "isUser": false,
+      "spent": 254000,
+      "remaining": 396000,
+      "spotsLeft": 6,
+      "roster": [
+        {
+          "name": "Nabil Jeewa",
+          "level": 4,
+          "price": 40000,
+          "retained": true
+        },
+        {
+          "name": "Uzzi Kazie",
+          "level": 3.3,
+          "price": 33000,
+          "retained": true
+        },
+        {
+          "name": "Zaid Cassim",
+          "level": 4.4,
+          "price": 44000,
+          "retained": true
+        },
+        {
+          "name": "Ahmed Motala",
+          "level": 4.1,
+          "price": 41000,
+          "retained": true
+        },
+        {
+          "name": "Shaheen Amra",
+          "level": 4.1,
+          "price": 41000,
+          "retained": true
+        },
+        {
+          "name": "Muhammad Laher (ML10)",
+          "level": 3.45,
+          "price": 55000,
+          "retained": false
+        }
+      ]
+    },
+    {
+      "id": "hm-aces",
+      "name": "H&M ACES",
+      "isUser": false,
+      "spent": 191000,
+      "remaining": 459000,
+      "spotsLeft": 7,
+      "roster": [
+        {
+          "name": "Humza Hussain",
+          "level": 3.3,
+          "price": 33000,
+          "retained": true
+        },
+        {
+          "name": "Marco Da Costa",
+          "level": 4,
+          "price": 40000,
+          "retained": true
+        },
+        {
+          "name": "Farid Woan",
+          "level": 3.5,
+          "price": 35000,
+          "retained": true
+        },
+        {
+          "name": "Rio Constantine",
+          "level": 3.8,
+          "price": 38000,
+          "retained": true
+        },
+        {
+          "name": "Jonty Matthys",
+          "level": 4.5,
+          "price": 45000,
+          "retained": true
+        }
+      ]
+    },
+    {
+      "id": "mid-life-crisis",
+      "name": "Mid Life Crisis",
+      "isUser": false,
+      "spent": 214000,
+      "remaining": 436000,
+      "spotsLeft": 7,
+      "roster": [
+        {
+          "name": "Hamza Peer",
+          "level": 4.5,
+          "price": 45000,
+          "retained": true
+        },
+        {
+          "name": "Muzi Khan",
+          "level": 4.2,
+          "price": 42000,
+          "retained": true
+        },
+        {
+          "name": "Raza Muhammed",
+          "level": 3.8,
+          "price": 38000,
+          "retained": true
+        },
+        {
+          "name": "Sayed Ally",
+          "level": 4.5,
+          "price": 45000,
+          "retained": true
+        },
+        {
+          "name": "Saeed El Mago",
+          "level": 4.4,
+          "price": 44000,
+          "retained": true
+        }
+      ]
+    },
+    {
+      "id": "mambas",
+      "name": "Mambas",
+      "isUser": false,
+      "spent": 180000,
+      "remaining": 470000,
+      "spotsLeft": 7,
+      "roster": [
+        {
+          "name": "Ricardo",
+          "level": 3.5,
+          "price": 35000,
+          "retained": true
+        },
+        {
+          "name": "Stanton",
+          "level": 3.8,
+          "price": 38000,
+          "retained": true
+        },
+        {
+          "name": "Prev",
+          "level": 3.6,
+          "price": 36000,
+          "retained": true
+        },
+        {
+          "name": "Ritesh",
+          "level": 3.5,
+          "price": 35000,
+          "retained": true
+        },
+        {
+          "name": "Filipe",
+          "level": 3.6,
+          "price": 36000,
+          "retained": true
+        }
+      ]
+    },
+    {
+      "id": "pirates",
+      "name": "Pirates",
+      "isUser": false,
+      "spent": 164000,
+      "remaining": 486000,
+      "spotsLeft": 7,
+      "roster": [
+        {
+          "name": "Ziyaad Moosa",
+          "level": 3,
+          "price": 30000,
+          "retained": true
+        },
+        {
+          "name": "Muhammed Patel",
+          "level": 3.5,
+          "price": 35000,
+          "retained": true
+        },
+        {
+          "name": "Stillz Jnr",
+          "level": 3.2,
+          "price": 32000,
+          "retained": true
+        },
+        {
+          "name": "Muaz Bodhania",
+          "level": 3.4,
+          "price": 34000,
+          "retained": true
+        },
+        {
+          "name": "Muhammed Hansa",
+          "level": 3.3,
+          "price": 33000,
+          "retained": true
+        }
+      ]
+    },
+    {
+      "id": "dons",
+      "name": "Dons",
+      "isUser": false,
+      "spent": 204000,
+      "remaining": 446000,
+      "spotsLeft": 7,
+      "roster": [
+        {
+          "name": "Manny",
+          "level": 4.3,
+          "price": 43000,
+          "retained": true
+        },
+        {
+          "name": "Rashid Bhika",
+          "level": 4.5,
+          "price": 45000,
+          "retained": true
+        },
+        {
+          "name": "Richard Kuo",
+          "level": 4,
+          "price": 40000,
+          "retained": true
+        },
+        {
+          "name": "Rieza Adamjee",
+          "level": 3.3,
+          "price": 33000,
+          "retained": true
+        },
+        {
+          "name": "Michael Huang",
+          "level": 4.3,
+          "price": 43000,
+          "retained": true
+        }
+      ]
+    },
+    {
+      "id": "isorade-vipers",
+      "name": "ISORADE VIPERS",
+      "isUser": false,
+      "spent": 191000,
+      "remaining": 459000,
+      "spotsLeft": 7,
+      "roster": [
+        {
+          "name": "Lee Aronson",
+          "level": 4.3,
+          "price": 43000,
+          "retained": true
+        },
+        {
+          "name": "Yahya Chetty",
+          "level": 3.9,
+          "price": 39000,
+          "retained": true
+        },
+        {
+          "name": "Brandon Heerden",
+          "level": 4.5,
+          "price": 45000,
+          "retained": true
+        },
+        {
+          "name": "Miki Garda",
+          "level": 3.5,
+          "price": 35000,
+          "retained": true
+        },
+        {
+          "name": "Dan Garda",
+          "level": 2.9,
+          "price": 29000,
+          "retained": true
+        }
+      ]
+    },
+    {
+      "id": "solara",
+      "name": "Solara",
+      "isUser": false,
+      "spent": 164000,
+      "remaining": 486000,
+      "spotsLeft": 7,
+      "roster": [
+        {
+          "name": "Mahin Dharmavir",
+          "level": 2.8,
+          "price": 28000,
+          "retained": true
+        },
+        {
+          "name": "Neeren Chetty",
+          "level": 3.4,
+          "price": 34000,
+          "retained": true
+        },
+        {
+          "name": "Talha Carrim",
+          "level": 3.2,
+          "price": 32000,
+          "retained": true
+        },
+        {
+          "name": "Peshen Padaychee",
+          "level": 2.8,
+          "price": 28000,
+          "retained": true
+        },
+        {
+          "name": "Vishal Dolly",
+          "level": 4.2,
+          "price": 42000,
+          "retained": true
+        }
+      ]
+    },
+    {
+      "id": "bed-shop-dream-team",
+      "name": "Bed Shop Dream Team",
+      "isUser": false,
+      "spent": 213000,
+      "remaining": 437000,
+      "spotsLeft": 7,
+      "roster": [
+        {
+          "name": "Mannu Suliman",
+          "level": 4.3,
+          "price": 43000,
+          "retained": true
+        },
+        {
+          "name": "Muhammed Carrim",
+          "level": 4.2,
+          "price": 42000,
+          "retained": true
+        },
+        {
+          "name": "Jerry Moola",
+          "level": 4.4,
+          "price": 44000,
+          "retained": true
+        },
+        {
+          "name": "Amaan Tayob",
+          "level": 4.5,
+          "price": 45000,
+          "retained": true
+        },
+        {
+          "name": "Ziyaad Sader",
+          "level": 3.9,
+          "price": 39000,
+          "retained": true
+        }
+      ]
+    }
+  ],
+  "must_buy": [
+    "Muhammed Zaid Ally",
+    "Abdullah Ali",
+    "Salmaan Beg"
+  ],
+  "wishlist": [
+    "ML10 (Muhammed Laher)",
+    "Uthmaan Salajee"
+  ],
+  "soldPlayers": [
+    "Mohammed Wajoodeen",
+    "Ahmed Ghaff",
+    "Morgan Booysen",
+    "Mohammed Rawat",
+    "Zaid Jacobs",
+    "Nabil Jeewa",
+    "Uzzi Kazie",
+    "Zaid Cassim",
+    "Ahmed Motala",
+    "Shaheen Amra",
+    "Humza Hussain",
+    "Marco Da Costa",
+    "Marco Da Costa Dias",
+    "Farid Woan",
+    "Rio Constantine",
+    "Jonty Matthys",
+    "Hamza Peer",
+    "Muzi Khan",
+    "Raza Muhammed",
+    "Sayed Ally",
+    "Saeed El Mago",
+    "Ricardo",
+    "Stanton",
+    "Prev",
+    "Ritesh",
+    "Filipe",
+    "Ziyaad Moosa",
+    "Muhammed Patel",
+    "Stillz Jnr",
+    "Muaz Bodhania",
+    "Muhammed Hansa",
+    "Manny",
+    "Rashid Bhika",
+    "Richard Kuo",
+    "Rieza Adamjee",
+    "Michael Huang",
+    "Lee Aronson",
+    "Yahya Chetty",
+    "Brandon Heerden",
+    "Miki Garda",
+    "Dan Garda",
+    "Mahin Dharmavir",
+    "Neeren Chetty",
+    "Talha Carrim",
+    "Peshen Padaychee",
+    "Vishal Dolly",
+    "Mannu Suliman",
+    "Muhammed Carrim",
+    "Jerry Moola",
+    "Amaan Tayob",
+    "Ziyaad Sader",
+    "Muhammad Laher (ML10)",
+    "Abdurrahmaan Omar"
+  ],
+  "playerSides": {
+    "Ahmed Ghaff": "Right",
+    "Mohammed Wajoodeen": "Left",
+    "Morgan Booysen": "Right",
+    "Mohammed Rawat": "Left",
+    "Abdullah Ali": "Right",
+    "Zaid Jacobs": "Left",
+    "Muhammed Zaid Ally": "Right",
+    "Salmaan Beg": "Left"
+  }
+}
