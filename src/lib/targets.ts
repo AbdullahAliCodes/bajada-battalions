@@ -1,5 +1,14 @@
 import { baseValue } from "@/lib/constants";
-import type { AuctionState, Player, TargetKind, TargetStatus } from "@/types/auction";
+import type {
+  AuctionState,
+  Player,
+  TargetBracket,
+  TargetKind,
+  TargetStatus,
+} from "@/types/auction";
+
+const LOWER_BRACKET_SORT = 1_000;
+const UNSET_BRACKET_SORT = 2_000;
 
 export function normalizeName(name: string): string {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -21,10 +30,14 @@ function tokens(name: string): string[] {
     .filter((token) => token.length > 2);
 }
 
-export function namesMatch(left: string, right: string): boolean {
+export function identityMatch(left: string, right: string): boolean {
   const leftKeys = new Set(aliasKeys(left));
   const rightKeys = new Set(aliasKeys(right));
-  if ([...leftKeys].some((key) => rightKeys.has(key))) return true;
+  return [...leftKeys].some((key) => rightKeys.has(key));
+}
+
+export function namesMatch(left: string, right: string): boolean {
+  if (identityMatch(left, right)) return true;
 
   const leftTokens = new Set(tokens(left));
   const rightTokens = new Set(tokens(right));
@@ -33,7 +46,40 @@ export function namesMatch(left: string, right: string): boolean {
 }
 
 export function findPlayer(players: Player[], name: string): Player | undefined {
-  return players.find((player) => namesMatch(player.name, name));
+  return (
+    players.find((player) => identityMatch(player.name, name)) ??
+    players.find((player) => namesMatch(player.name, name))
+  );
+}
+
+// Wishlist order is stored in players.target_sort: 0–999 upper, 1000–1999 lower, 2000+ unset.
+export function wishlistSort(index: number, bracket: TargetBracket | undefined): number {
+  if (bracket === "lower") return LOWER_BRACKET_SORT + index;
+  if (bracket === "upper") return index;
+  return UNSET_BRACKET_SORT + index;
+}
+
+export function bracketFromWishlistSort(
+  sort: number | null | undefined,
+): TargetBracket | undefined {
+  if (sort == null || sort >= UNSET_BRACKET_SORT) return undefined;
+  if (sort >= LOWER_BRACKET_SORT) return "lower";
+  return "upper";
+}
+
+export function lookupBracket(
+  name: string,
+  brackets: Record<string, TargetBracket> | undefined,
+): TargetBracket | undefined {
+  if (!brackets) return undefined;
+  const match = Object.entries(brackets).find(([key]) => identityMatch(key, name));
+  return match?.[1];
+}
+
+export function bracketLabel(bracket: TargetBracket | undefined): string {
+  if (bracket === "upper") return "Upper bracket";
+  if (bracket === "lower") return "Lower bracket";
+  return "Bracket not set";
 }
 
 export function targetStatus(name: string, state: AuctionState): TargetStatus {

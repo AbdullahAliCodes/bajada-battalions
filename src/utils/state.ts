@@ -12,15 +12,23 @@ import {
   setPlayerSide,
 } from "@/lib/formation";
 import { recomputeTeam } from "@/lib/roster";
-import { namesMatch } from "@/lib/targets";
+import {
+  bracketFromWishlistSort,
+  identityMatch,
+  lookupBracket,
+  namesMatch,
+  wishlistSort,
+} from "@/lib/targets";
 import { createServerSupabase } from "@/utils/supabase";
 import type {
   AuctionState,
   PairKey,
   PlayerSide,
   RosterPlayer,
+  TargetBracket,
   Team,
 } from "@/types/auction";
+import poolPlayers from "../../data/players.json";
 
 type DbTeam = {
   id: string;
@@ -77,7 +85,26 @@ export function findNamed<T extends { name: string }>(
   rows: T[],
   name: string,
 ): T | undefined {
-  return rows.find((row) => namesMatch(row.name, name));
+  return rows.find((row) => identityMatch(row.name, name));
+}
+
+function poolLevel(name: string): number | null {
+  const row = (poolPlayers as { name: string; level: number }[]).find((player) =>
+    identityMatch(player.name, name),
+  );
+  return row && Number.isFinite(row.level) ? row.level : null;
+}
+
+function normalizeBrackets(
+  wishlist: string[],
+  brackets: Record<string, TargetBracket> | undefined,
+): Record<string, TargetBracket> {
+  const next: Record<string, TargetBracket> = {};
+  for (const name of wishlist) {
+    const bracket = lookupBracket(name, brackets);
+    if (bracket) next[name] = bracket;
+  }
+  return next;
 }
 
 function bracketForPair(pair: PairKey): "upper" | "lower" | "bench" {
@@ -159,6 +186,7 @@ export function normalizeState(state: AuctionState): AuctionState {
       (name) => !rosterNames.some((rosterName) => namesMatch(rosterName, name)),
     ),
     playerSides: state.playerSides ?? {},
+    targetBrackets: normalizeBrackets(wishlist, state.targetBrackets),
   };
   const formation = dropLostFromFormation(draft);
   const playerSides = mergePlayerSides(state.playerSides, formation);
@@ -183,7 +211,11 @@ export function isAuctionState(value: unknown): value is AuctionState {
     (candidate.wishlist === undefined || Array.isArray(candidate.wishlist)) &&
     (candidate.passedPlayers === undefined || Array.isArray(candidate.passedPlayers)) &&
     (candidate.playerSides === undefined ||
-      (typeof candidate.playerSides === "object" && candidate.playerSides !== null))
+      (typeof candidate.playerSides === "object" && candidate.playerSides !== null)) &&
+    (candidate.targetBrackets === undefined ||
+      (typeof candidate.targetBrackets === "object" &&
+        candidate.targetBrackets !== null &&
+        !Array.isArray(candidate.targetBrackets)))
   );
 }
 
@@ -243,10 +275,15 @@ function assembleState(
     .filter((player) => player.target_list === "must_buy")
     .sort((a, b) => (a.target_sort ?? 0) - (b.target_sort ?? 0))
     .map((player) => player.name);
-  const wishlist = dbPlayers
+  const wishlistRows = dbPlayers
     .filter((player) => player.target_list === "wishlist")
-    .sort((a, b) => (a.target_sort ?? 0) - (b.target_sort ?? 0))
-    .map((player) => player.name);
+    .sort((a, b) => (a.target_sort ?? 0) - (b.target_sort ?? 0));
+  const wishlist = wishlistRows.map((player) => player.name);
+  const targetBrackets: Record<string, TargetBracket> = {};
+  for (const player of wishlistRows) {
+    const bracket = bracketFromWishlistSort(player.target_sort);
+    if (bracket) targetBrackets[player.name] = bracket;
+  }
   const passedPlayers = dbPlayers.filter(isPassedRow).map((player) => player.name);
   const soldPlayers = dbPlayers
     .filter((player) => !isPassedRow(player) && (player.status !== "available" || player.team_id))
@@ -259,6 +296,7 @@ function assembleState(
     soldPlayers,
     passedPlayers,
     playerSides,
+    targetBrackets,
   });
 }
 
@@ -354,7 +392,7 @@ export async function writeState(state: AuctionState): Promise<AuctionState> {
     const key = existingRow?.name ?? name;
     const prev = desired.get(key) ?? {
       name: key,
-      level: toLevel(existingRow?.level) ?? null,
+      level: toLevel(existingRow?.level) ?? poolLevel(key) ?? null,
       side: (existingRow?.side as PlayerSide | undefined) ?? "Unknown",
       status: existingRow?.status ?? "available",
       team_id: null,
@@ -396,7 +434,10 @@ export async function writeState(state: AuctionState): Promise<AuctionState> {
     remember(name, { target_list: "must_buy", target_sort: index });
   });
   next.wishlist.forEach((name, index) => {
-    remember(name, { target_list: "wishlist", target_sort: index });
+    remember(name, {
+      target_list: "wishlist",
+      target_sort: wishlistSort(index, lookupBracket(name, next.targetBrackets)),
+    });
   });
 
   for (const [name, side] of Object.entries(next.playerSides)) {

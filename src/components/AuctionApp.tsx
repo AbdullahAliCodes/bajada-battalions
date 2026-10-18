@@ -28,12 +28,21 @@ import {
 } from "@/lib/roster";
 import {
   listForPlayer,
+  identityMatch,
+  lookupBracket,
   namesMatch,
   pendingTargets,
   playerBaseValue,
   reservedMustBuyBudget,
 } from "@/lib/targets";
-import type { AuctionState, PairKey, Player, PlayerSide, TargetKind } from "@/types/auction";
+import type {
+  AuctionState,
+  PairKey,
+  Player,
+  PlayerSide,
+  TargetBracket,
+  TargetKind,
+} from "@/types/auction";
 
 type Tab = AuctionTab;
 
@@ -295,19 +304,37 @@ export function AuctionApp() {
     }
   }
 
-  async function addTarget(name: string, list: TargetKind) {
+  async function addTarget(name: string, list: TargetKind, bracket?: TargetBracket) {
     const current = stateRef.current;
     if (!current) return;
     const alreadyOn = [...current.must_buy, ...current.wishlist].some((item) =>
       namesMatch(item, name),
     );
     if (alreadyOn) return;
+    const targetBrackets = { ...(current.targetBrackets ?? {}) };
+    if (list === "wishlist" && bracket) targetBrackets[name] = bracket;
     try {
       await persist({
         ...current,
         must_buy: list === "must_buy" ? [...current.must_buy, name] : current.must_buy,
         wishlist: list === "wishlist" ? [...current.wishlist, name] : current.wishlist,
+        targetBrackets,
       });
+    } catch {
+      // rolled back in commit
+    }
+  }
+
+  async function changeBracket(name: string, bracket: TargetBracket) {
+    const current = stateRef.current;
+    if (!current) return;
+    const targetBrackets = { ...(current.targetBrackets ?? {}) };
+    for (const key of Object.keys(targetBrackets)) {
+      if (identityMatch(key, name)) delete targetBrackets[key];
+    }
+    targetBrackets[name] = bracket;
+    try {
+      await persist({ ...current, targetBrackets });
     } catch {
       // rolled back in commit
     }
@@ -445,6 +472,7 @@ export function AuctionApp() {
                 userTeam={userTeam}
                 opponents={opponents}
                 listStatus={listForPlayer(activePlayer.name, state.must_buy, state.wishlist)}
+                bracket={lookupBracket(activePlayer.name, state.targetBrackets)}
                 side={getPlayerSide(activePlayer.name, state)}
                 onSideChange={(side) => void changeSide(activePlayer.name, side)}
                 advice={advice}
@@ -465,9 +493,10 @@ export function AuctionApp() {
           <TargetList
             players={players}
             state={state}
-            onAdd={(name, list) => void addTarget(name, list)}
+            onAdd={(name, list, bracket) => void addTarget(name, list, bracket)}
             onRemove={(name, list) => void removeTarget(name, list)}
             onSideChange={(name, side) => void changeSide(name, side)}
+            onBracketChange={(name, bracket) => void changeBracket(name, bracket)}
           />
         ) : (
           <PassedList

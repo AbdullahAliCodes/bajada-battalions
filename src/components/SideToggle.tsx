@@ -1,6 +1,6 @@
 "use client";
 
-import type { PlayerSide } from "@/types/auction";
+import type { PlayerSide, TargetBracket } from "@/types/auction";
 
 type SideToggleProps = {
   value: PlayerSide;
@@ -31,6 +31,45 @@ export function SideToggle({ value, onChange }: SideToggleProps) {
               active
                 ? "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-black"
                 : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50"
+            }`}
+          >
+            {option.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+const BRACKETS: { bracket: TargetBracket; label: string }[] = [
+  { bracket: "upper", label: "Upper" },
+  { bracket: "lower", label: "Lower" },
+];
+
+export function BracketToggle({
+  value,
+  onChange,
+}: {
+  value: TargetBracket | undefined;
+  onChange: (bracket: TargetBracket) => void;
+}) {
+  return (
+    <div
+      className="inline-flex rounded-md border border-zinc-200 p-0.5 dark:border-zinc-800"
+      role="group"
+      aria-label="Target bracket"
+    >
+      {BRACKETS.map((option) => {
+        const active = value === option.bracket;
+        return (
+          <button
+            key={option.bracket}
+            type="button"
+            onClick={() => onChange(option.bracket)}
+            className={`h-7 rounded px-2.5 text-[11px] ${
+              active
+                ? "bg-zinc-900 font-bold text-white dark:bg-zinc-50 dark:text-black"
+                : "font-semibold text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50"
             }`}
           >
             {option.label}

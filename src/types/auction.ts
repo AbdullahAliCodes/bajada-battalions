@@ -43,6 +43,7 @@ export type Team = {
 
 export type TargetKind = "must_buy" | "wishlist";
 export type TargetStatus = "pending" | "acquired" | "lost";
+export type TargetBracket = "upper" | "lower";
 
 export type AuctionState = {
   teams: Team[];
@@ -51,4 +52,5 @@ export type AuctionState = {
   soldPlayers: string[];
   passedPlayers: string[];
   playerSides: Record<string, PlayerSide>;
+  targetBrackets: Record<string, TargetBracket>;
 };

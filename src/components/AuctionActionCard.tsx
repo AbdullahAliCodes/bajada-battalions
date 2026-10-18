@@ -5,13 +5,15 @@ import { Loader2 } from "lucide-react";
 import { baseValue } from "@/lib/constants";
 import { formatRand, parseRand } from "@/lib/format";
 import { SideToggle } from "@/components/SideToggle";
-import type { Player, PlayerSide, TargetKind, Team } from "@/types/auction";
+import { bracketLabel } from "@/lib/targets";
+import type { Player, PlayerSide, TargetBracket, TargetKind, Team } from "@/types/auction";
 
 type AuctionActionCardProps = {
   player: Player;
   userTeam: Team;
   opponents: Team[];
   listStatus: TargetKind | null;
+  bracket?: TargetBracket;
   side: PlayerSide;
   onSideChange: (side: PlayerSide) => void;
   advice: string;
@@ -30,6 +32,7 @@ export function AuctionActionCard({
   userTeam,
   opponents,
   listStatus,
+  bracket,
   side,
   onSideChange,
   advice,
@@ -103,6 +106,12 @@ export function AuctionActionCard({
           {listStatus === "wishlist" && (
             <p className="mt-2 inline-flex rounded-full border border-zinc-200 px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-zinc-600 dark:border-zinc-800 dark:text-zinc-300">
               Wishlist
+            </p>
+          )}
+          {listStatus === "wishlist" && (
+            <p className="mt-2 text-sm font-bold text-zinc-900 dark:text-zinc-50">
+              {bracketLabel(bracket)}
+              {side !== "Unknown" ? ` · ${side} side` : ""}
             </p>
           )}
         </div>

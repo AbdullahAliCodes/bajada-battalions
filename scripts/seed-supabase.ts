@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { PAIR_KEYS } from "../src/lib/formation";
-import { namesMatch } from "../src/lib/targets";
+import { identityMatch, lookupBracket, namesMatch, wishlistSort } from "../src/lib/targets";
 import type { AuctionState, PairKey, Player, PlayerSide } from "../src/types/auction";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -96,7 +96,7 @@ async function main() {
 
   const byName = new Map<string, PlayerRow>();
   function remember(name: string, patch: Partial<PlayerRow>) {
-    const existing = [...byName.values()].find((row) => namesMatch(row.name, name));
+    const existing = [...byName.values()].find((row) => identityMatch(row.name, name));
     const key = existing?.name ?? name;
     const prev = byName.get(key) ?? {
       name: key,
@@ -133,13 +133,18 @@ async function main() {
     remember(name, { target_list: "must_buy", target_sort: index });
   });
   (state.wishlist ?? []).forEach((name, index) => {
-    remember(name, { target_list: "wishlist", target_sort: index });
+    remember(name, {
+      target_list: "wishlist",
+      target_sort: state.targetBrackets
+        ? wishlistSort(index, lookupBracket(name, state.targetBrackets))
+        : index,
+    });
   });
   for (const [name, side] of Object.entries(state.playerSides ?? {})) {
     remember(name, { side });
   }
   for (const name of state.passedPlayers ?? []) {
-    const existing = [...byName.values()].find((row) => namesMatch(row.name, name));
+    const existing = [...byName.values()].find((row) => identityMatch(row.name, name));
     if (existing?.team_id) continue;
     remember(name, {
       status: "Lost",
