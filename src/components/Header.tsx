@@ -12,7 +12,7 @@ type HeaderProps = {
   spotsLeft: number;
 };
 
-export type AuctionTab = "floor" | "targets" | "passed";
+export type AuctionTab = "floor" | "targets" | "passed" | "budget";
 
 type AuctionTabsProps = {
   tab: AuctionTab;
@@ -69,7 +69,7 @@ export function Header({ spent, remaining, spotsLeft }: HeaderProps) {
 
 export function AuctionTabs({ tab, onTabChange }: AuctionTabsProps) {
   return (
-    <nav className="mx-auto mb-8 grid w-full grid-cols-3 rounded-xl bg-zinc-200/60 p-1.5 backdrop-blur-sm dark:bg-zinc-800/60 sm:flex sm:w-auto">
+    <nav className="mx-auto mb-8 grid w-full grid-cols-2 gap-1 rounded-xl bg-zinc-200/60 p-1.5 backdrop-blur-sm dark:bg-zinc-800/60 sm:grid-cols-4">
       <TabButton active={tab === "floor"} onClick={() => onTabChange("floor")}>
         Auction Floor
       </TabButton>
@@ -78,6 +78,9 @@ export function AuctionTabs({ tab, onTabChange }: AuctionTabsProps) {
       </TabButton>
       <TabButton active={tab === "passed"} onClick={() => onTabChange("passed")}>
         Passed
+      </TabButton>
+      <TabButton active={tab === "budget"} onClick={() => onTabChange("budget")}>
+        Budget estimator
       </TabButton>
     </nav>
   );
@@ -96,7 +99,7 @@ function TabButton({
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-lg px-2 py-2.5 text-center text-xs font-medium whitespace-nowrap transition-all sm:flex-none sm:px-6 sm:text-sm ${
+      className={`rounded-lg px-2 py-2.5 text-center text-xs font-medium whitespace-nowrap transition-all sm:px-3 sm:text-sm ${
         active
           ? "border border-black/5 bg-white text-zinc-900 shadow-sm dark:border-white/5 dark:bg-zinc-900 dark:text-zinc-50"
           : "border border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"

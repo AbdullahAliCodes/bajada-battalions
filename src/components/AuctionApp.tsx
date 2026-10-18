@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AuctionActionCard } from "@/components/AuctionActionCard";
+import { BudgetEstimator } from "@/components/BudgetEstimator";
 import { AuctionTabs, Header, type AuctionTab } from "@/components/Header";
 import { PassedList } from "@/components/PassedList";
 import { PlayerSearch } from "@/components/PlayerSearch";
@@ -459,7 +460,11 @@ export function AuctionApp() {
           </p>
         )}
 
-        {tab === "floor" ? (
+        <div className={tab === "budget" ? undefined : "hidden"}>
+          <BudgetEstimator state={state} players={players} />
+        </div>
+
+        {tab === "budget" ? null : tab === "floor" ? (
           <div className="space-y-12">
             <PlayerSearch
               players={players}

@@ -87,10 +87,11 @@ export function AuctionSkeleton() {
           </div>
         </div>
 
-        <div className="mx-auto mb-8 grid w-full grid-cols-3 rounded-xl bg-zinc-200/60 p-1.5 dark:bg-zinc-800/60 sm:flex sm:w-auto">
-          <Skeleton className="h-10 rounded-lg sm:w-36" />
-          <Skeleton className="ml-1 h-10 rounded-lg sm:w-36" />
-          <Skeleton className="ml-1 h-10 rounded-lg sm:w-28" />
+        <div className="mx-auto mb-8 grid w-full grid-cols-2 gap-1 rounded-xl bg-zinc-200/60 p-1.5 dark:bg-zinc-800/60 sm:grid-cols-4">
+          <Skeleton className="h-10 rounded-lg" />
+          <Skeleton className="h-10 rounded-lg" />
+          <Skeleton className="h-10 rounded-lg" />
+          <Skeleton className="h-10 rounded-lg" />
         </div>
 
         <div className="space-y-12">
