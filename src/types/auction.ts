@@ -49,5 +49,6 @@ export type AuctionState = {
   must_buy: string[];
   wishlist: string[];
   soldPlayers: string[];
+  passedPlayers: string[];
   playerSides: Record<string, PlayerSide>;
 };

@@ -11,6 +11,7 @@ import {
   placeInFormation,
   setPlayerSide,
 } from "@/lib/formation";
+import { recomputeTeam } from "@/lib/roster";
 import { namesMatch } from "@/lib/targets";
 import { createServerSupabase } from "@/utils/supabase";
 import type {
@@ -108,12 +109,8 @@ function uniqueNames(names: string[] | undefined): string[] {
 }
 
 function normalizeTeam(team: Team, playerSides: Record<string, PlayerSide> = {}): Team {
-  const spent = team.roster.reduce((sum, player) => sum + player.price, 0);
-  return {
+  return recomputeTeam({
     ...team,
-    spent,
-    remaining: TOTAL_BUDGET - spent,
-    spotsLeft: Math.max(0, ROSTER_SIZE - team.roster.length),
     formation: team.isUser
       ? normalizeFormation(team.formation ?? DEFAULT_FORMATION)
       : team.formation,
@@ -123,7 +120,21 @@ function normalizeTeam(team: Team, playerSides: Record<string, PlayerSide> = {})
           side: lookupSide(player.name, playerSides) ?? player.side ?? "Unknown",
         }))
       : team.roster,
-  };
+  });
+}
+
+function uniqueByMatch(names: string[] | undefined): string[] {
+  const next: string[] = [];
+  for (const name of names ?? []) {
+    const trimmed = name.trim();
+    if (!trimmed || next.some((item) => namesMatch(item, trimmed))) continue;
+    next.push(trimmed);
+  }
+  return next;
+}
+
+function isPassedRow(player: DbPlayer): boolean {
+  return player.status === "Lost" && !player.team_id && !player.retained;
 }
 
 export function normalizeState(state: AuctionState): AuctionState {
@@ -143,7 +154,10 @@ export function normalizeState(state: AuctionState): AuctionState {
     })),
     must_buy: mustBuy,
     wishlist,
-    soldPlayers: [...new Set([...state.soldPlayers, ...rosterNames])],
+    soldPlayers: uniqueByMatch(rosterNames),
+    passedPlayers: uniqueByMatch(state.passedPlayers).filter(
+      (name) => !rosterNames.some((rosterName) => namesMatch(rosterName, name)),
+    ),
     playerSides: state.playerSides ?? {},
   };
   const formation = dropLostFromFormation(draft);
@@ -167,6 +181,7 @@ export function isAuctionState(value: unknown): value is AuctionState {
     Array.isArray(candidate.soldPlayers) &&
     (candidate.must_buy === undefined || Array.isArray(candidate.must_buy)) &&
     (candidate.wishlist === undefined || Array.isArray(candidate.wishlist)) &&
+    (candidate.passedPlayers === undefined || Array.isArray(candidate.passedPlayers)) &&
     (candidate.playerSides === undefined ||
       (typeof candidate.playerSides === "object" && candidate.playerSides !== null))
   );
@@ -232,8 +247,9 @@ function assembleState(
     .filter((player) => player.target_list === "wishlist")
     .sort((a, b) => (a.target_sort ?? 0) - (b.target_sort ?? 0))
     .map((player) => player.name);
+  const passedPlayers = dbPlayers.filter(isPassedRow).map((player) => player.name);
   const soldPlayers = dbPlayers
-    .filter((player) => player.status !== "available" || player.team_id)
+    .filter((player) => !isPassedRow(player) && (player.status !== "available" || player.team_id))
     .map((player) => player.name);
 
   return normalizeState({
@@ -241,6 +257,7 @@ function assembleState(
     must_buy,
     wishlist,
     soldPlayers,
+    passedPlayers,
     playerSides,
   });
 }
@@ -275,28 +292,35 @@ export async function readState(): Promise<AuctionState> {
   return assembleState(teams, players, formations);
 }
 
-export async function writeState(state: AuctionState): Promise<AuctionState> {
-  const next = normalizeState(state);
-  const { supabase, teams: currentTeams, players: currentPlayers } = await fetchDbSnapshot();
-
-  for (const team of next.teams) {
-    const current = currentTeams.find((row) => row.id === team.id);
-    const rosterSpend = team.roster.reduce((sum, player) => sum + player.price, 0);
-    if (rosterSpend !== team.spent) {
-      throw new Error(`Spend mismatch for ${team.name}: roster ${rosterSpend} vs ${team.spent}`);
+function assertRosterBudgets(state: AuctionState) {
+  const owners: { name: string; team: string }[] = [];
+  for (const team of state.teams) {
+    if (team.roster.length > ROSTER_SIZE) {
+      throw new Error(`${team.name} has more than ${ROSTER_SIZE} players`);
     }
-    if (team.remaining < 0) {
+    let spent = 0;
+    for (const player of team.roster) {
+      if (!Number.isInteger(player.price) || player.price <= 0) {
+        throw new Error(`${player.name} needs a price above zero`);
+      }
+      const clash = owners.find((owner) => namesMatch(owner.name, player.name));
+      if (clash) throw new Error(`${player.name} is already on ${clash.team}`);
+      owners.push({ name: player.name, team: team.name });
+      spent += player.price;
+    }
+    if (spent > TOTAL_BUDGET || team.remaining !== TOTAL_BUDGET - spent || team.spent !== spent) {
       throw new Error(`${team.name} would go over budget`);
     }
-    if (current && team.spent > current.spent) {
-      const delta = team.spent - current.spent;
-      if (current.remaining_budget < delta) {
-        throw new Error(
-          `${team.name} cannot afford this bid. Remaining in DB: R${current.remaining_budget}`,
-        );
-      }
+    if (team.spotsLeft !== ROSTER_SIZE - team.roster.length) {
+      throw new Error(`Spot count mismatch for ${team.name}`);
     }
   }
+}
+
+export async function writeState(state: AuctionState): Promise<AuctionState> {
+  const next = normalizeState(state);
+  assertRosterBudgets(next);
+  const { supabase, players: currentPlayers } = await fetchDbSnapshot();
 
   const teamRows = next.teams.map((team, index) => ({
     id: team.id,
@@ -377,6 +401,18 @@ export async function writeState(state: AuctionState): Promise<AuctionState> {
 
   for (const [name, side] of Object.entries(next.playerSides)) {
     remember(name, { side });
+  }
+
+  for (const name of next.passedPlayers) {
+    const existingRow = findNamed(currentPlayers, name);
+    const key = existingRow?.name ?? name;
+    if (desired.get(key)?.team_id) continue;
+    remember(name, {
+      status: "Lost",
+      team_id: null,
+      price: null,
+      retained: false,
+    });
   }
 
   const playerRows = [...desired.values()].map((row) => ({

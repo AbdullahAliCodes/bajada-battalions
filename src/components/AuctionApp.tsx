@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AuctionActionCard } from "@/components/AuctionActionCard";
-import { AuctionTabs, Header } from "@/components/Header";
+import { AuctionTabs, Header, type AuctionTab } from "@/components/Header";
+import { PassedList } from "@/components/PassedList";
 import { PlayerSearch } from "@/components/PlayerSearch";
 import { AuctionSkeleton } from "@/components/Skeleton";
 import { TargetList } from "@/components/TargetList";
@@ -17,7 +18,14 @@ import {
   placeInFormation,
   setPlayerSide,
 } from "@/lib/formation";
-import { recomputeTeam, releaseRosterPlayer } from "@/lib/roster";
+import {
+  RosterError,
+  assignRosterPlayer,
+  isInPool,
+  passPlayer,
+  releaseRosterPlayer,
+  restorePassedPlayer,
+} from "@/lib/roster";
 import {
   listForPlayer,
   namesMatch,
@@ -27,7 +35,7 @@ import {
 } from "@/lib/targets";
 import type { AuctionState, PairKey, Player, PlayerSide, TargetKind } from "@/types/auction";
 
-type Tab = "floor" | "targets";
+type Tab = AuctionTab;
 
 async function readJson<T>(response: Response): Promise<T> {
   const payload = (await response.json()) as T & { error?: string };
@@ -239,38 +247,51 @@ export function AuctionApp() {
       const formation = boughtByUs
         ? userFormation
         : clearNameFromFormation(userFormation, activePlayer.name);
-      const player = activePlayer;
-      const next: AuctionState = applyUserFormation(
-        {
-          ...current,
-          soldPlayers: [...current.soldPlayers, player.name],
-          teams: current.teams.map((team) =>
-            team.id === teamId
-              ? recomputeTeam({
-                  ...team,
-                  roster: [
-                    ...team.roster,
-                    {
-                      name: player.name,
-                      level: player.level,
-                      price,
-                      retained: false,
-                      side: getPlayerSide(player.name, current),
-                    },
-                  ],
-                })
-              : team,
-          ),
-        },
+      const next = applyUserFormation(
+        assignRosterPlayer(
+          current,
+          teamId,
+          {
+            name: activePlayer.name,
+            level: activePlayer.level,
+            side: getPlayerSide(activePlayer.name, current),
+          },
+          price,
+        ),
         formation,
       );
       await persist(next);
       setActivePlayer(null);
       setAdvice("");
-    } catch {
-      // commit already restored the last saved desk and raised the banner
+    } catch (assignError) {
+      if (assignError instanceof RosterError) setError(assignError.message);
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function markPassed() {
+    const current = stateRef.current;
+    if (!current || !activePlayer) return;
+    setBusy(true);
+    try {
+      await persist(passPlayer(current, activePlayer.name));
+      setActivePlayer(null);
+      setAdvice("");
+    } catch (passError) {
+      if (passError instanceof RosterError) setError(passError.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function restorePassed(name: string) {
+    const current = stateRef.current;
+    if (!current) return;
+    try {
+      await persist(restorePassedPlayer(current, name));
+    } catch {
+      // rolled back in commit
     }
   }
 
@@ -411,7 +432,7 @@ export function AuctionApp() {
           <div className="space-y-12">
             <PlayerSearch
               players={players}
-              soldPlayers={state.soldPlayers}
+              isAvailable={(name) => isInPool(name, state)}
               onSelect={setActivePlayer}
             />
             {activePlayer ? (
@@ -427,10 +448,7 @@ export function AuctionApp() {
                 busy={busy}
                 onBoughtByUs={(price) => assignPlayer(USER_TEAM_ID, price)}
                 onBoughtByOpponent={(teamId, price) => assignPlayer(teamId, price)}
-                onPassed={() => {
-                  setActivePlayer(null);
-                  setAdvice("");
-                }}
+                onPassed={() => void markPassed()}
               />
             ) : (
               <p className="rounded-xl border border-dashed border-zinc-300 bg-white/60 px-5 py-10 text-center text-sm text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-400">
@@ -439,13 +457,19 @@ export function AuctionApp() {
             )}
             <TeamLeaderboard teams={state.teams} onRelease={(teamId, name) => void releasePlayer(teamId, name)} />
           </div>
-        ) : (
+        ) : tab === "targets" ? (
           <TargetList
             players={players}
             state={state}
             onAdd={(name, list) => void addTarget(name, list)}
             onRemove={(name, list) => void removeTarget(name, list)}
             onSideChange={(name, side) => void changeSide(name, side)}
+          />
+        ) : (
+          <PassedList
+            names={state.passedPlayers ?? []}
+            players={players}
+            onRestore={(name) => void restorePassed(name)}
           />
         )}
         </main>

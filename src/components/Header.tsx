@@ -11,9 +11,11 @@ type HeaderProps = {
   spotsLeft: number;
 };
 
+export type AuctionTab = "floor" | "targets" | "passed";
+
 type AuctionTabsProps = {
-  tab: "floor" | "targets";
-  onTabChange: (tab: "floor" | "targets") => void;
+  tab: AuctionTab;
+  onTabChange: (tab: AuctionTab) => void;
 };
 
 export function Header({ remaining, spotsLeft }: HeaderProps) {
@@ -63,12 +65,15 @@ export function Header({ remaining, spotsLeft }: HeaderProps) {
 
 export function AuctionTabs({ tab, onTabChange }: AuctionTabsProps) {
   return (
-    <nav className="mx-auto mb-8 flex w-full rounded-xl bg-zinc-200/60 p-1.5 backdrop-blur-sm dark:bg-zinc-800/60 sm:w-auto">
+    <nav className="mx-auto mb-8 grid w-full grid-cols-3 rounded-xl bg-zinc-200/60 p-1.5 backdrop-blur-sm dark:bg-zinc-800/60 sm:flex sm:w-auto">
       <TabButton active={tab === "floor"} onClick={() => onTabChange("floor")}>
         Auction Floor
       </TabButton>
       <TabButton active={tab === "targets"} onClick={() => onTabChange("targets")}>
         Target List
+      </TabButton>
+      <TabButton active={tab === "passed"} onClick={() => onTabChange("passed")}>
+        Passed
       </TabButton>
     </nav>
   );
@@ -87,7 +92,7 @@ function TabButton({
     <button
       type="button"
       onClick={onClick}
-      className={`flex-1 rounded-lg px-6 py-2.5 text-sm font-medium transition-all sm:flex-none ${
+      className={`rounded-lg px-2 py-2.5 text-center text-xs font-medium whitespace-nowrap transition-all sm:flex-none sm:px-6 sm:text-sm ${
         active
           ? "border border-black/5 bg-white text-zinc-900 shadow-sm dark:border-white/5 dark:bg-zinc-900 dark:text-zinc-50"
           : "border border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"

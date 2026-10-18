@@ -4,42 +4,42 @@
       "id": "bajada-batallions",
       "name": "Bajada Batallions",
       "isUser": true,
-      "spent": 247000,
-      "remaining": 403000,
+      "spent": 297000,
+      "remaining": 353000,
       "spotsLeft": 6,
       "roster": [
         {
           "name": "Mohammed Wajoodeen",
           "level": 4.5,
-          "price": 45000,
+          "price": 55000,
           "retained": true,
           "side": "Left"
         },
         {
           "name": "Ahmed Ghaff",
           "level": 4,
-          "price": 40000,
+          "price": 50000,
           "retained": true,
           "side": "Right"
         },
         {
           "name": "Morgan Booysen",
           "level": 3.6,
-          "price": 36000,
+          "price": 46000,
           "retained": true,
           "side": "Right"
         },
         {
           "name": "Zaid Jacobs",
           "level": 3.3,
-          "price": 33000,
+          "price": 43000,
           "retained": true,
           "side": "Left"
         },
         {
           "name": "Mohammed Rawat",
           "level": 3.8,
-          "price": 38000,
+          "price": 48000,
           "retained": true,
           "side": "Left"
         },
@@ -82,38 +82,38 @@
       "id": "assassins",
       "name": "Assassins",
       "isUser": false,
-      "spent": 254000,
-      "remaining": 396000,
+      "spent": 304000,
+      "remaining": 346000,
       "spotsLeft": 6,
       "roster": [
         {
           "name": "Nabil Jeewa",
           "level": 4,
-          "price": 40000,
+          "price": 50000,
           "retained": true
         },
         {
           "name": "Uzzi Kazie",
           "level": 3.3,
-          "price": 33000,
+          "price": 43000,
           "retained": true
         },
         {
           "name": "Zaid Hassim",
           "level": 4.4,
-          "price": 44000,
+          "price": 54000,
           "retained": true
         },
         {
           "name": "Ahmed Motala",
           "level": 4.1,
-          "price": 41000,
+          "price": 51000,
           "retained": true
         },
         {
           "name": "Shaheen Amra",
           "level": 4.1,
-          "price": 41000,
+          "price": 51000,
           "retained": true
         },
         {
@@ -128,38 +128,38 @@
       "id": "hm-aces",
       "name": "H&M ACES",
       "isUser": false,
-      "spent": 191000,
-      "remaining": 459000,
+      "spent": 241000,
+      "remaining": 409000,
       "spotsLeft": 7,
       "roster": [
         {
           "name": "Luca Radmanovic",
           "level": 4.5,
-          "price": 45000,
+          "price": 55000,
           "retained": true
         },
         {
           "name": "Moe Eb",
           "level": 3.5,
-          "price": 35000,
+          "price": 45000,
           "retained": true
         },
         {
           "name": "Alessio",
           "level": 3.8,
-          "price": 38000,
+          "price": 48000,
           "retained": true
         },
         {
           "name": "Ridwaan Patel",
           "level": 3.5,
-          "price": 35000,
+          "price": 45000,
           "retained": true
         },
         {
           "name": "Rio Constantine",
           "level": 3.8,
-          "price": 38000,
+          "price": 48000,
           "retained": true
         }
       ]
@@ -168,38 +168,38 @@
       "id": "mid-life-crisis",
       "name": "Mid Life Crisis",
       "isUser": false,
-      "spent": 214000,
-      "remaining": 436000,
+      "spent": 264000,
+      "remaining": 386000,
       "spotsLeft": 7,
       "roster": [
         {
           "name": "Hamza Peer",
           "level": 4.5,
-          "price": 45000,
+          "price": 55000,
           "retained": true
         },
         {
           "name": "Muzi Khan",
           "level": 4.2,
-          "price": 42000,
+          "price": 52000,
           "retained": true
         },
         {
           "name": "Raza Muhammed",
           "level": 3.8,
-          "price": 38000,
+          "price": 48000,
           "retained": true
         },
         {
           "name": "Sayed Ally",
           "level": 4.5,
-          "price": 45000,
+          "price": 55000,
           "retained": true
         },
         {
           "name": "Saeed El Mago",
           "level": 4.4,
-          "price": 44000,
+          "price": 54000,
           "retained": true
         }
       ]
@@ -208,38 +208,38 @@
       "id": "mambas",
       "name": "Mambas",
       "isUser": false,
-      "spent": 180000,
-      "remaining": 470000,
+      "spent": 230000,
+      "remaining": 420000,
       "spotsLeft": 7,
       "roster": [
         {
           "name": "Ricardo",
           "level": 3.5,
-          "price": 35000,
+          "price": 45000,
           "retained": true
         },
         {
           "name": "Stanton",
           "level": 3.8,
-          "price": 38000,
+          "price": 48000,
           "retained": true
         },
         {
           "name": "Prev",
           "level": 3.6,
-          "price": 36000,
+          "price": 46000,
           "retained": true
         },
         {
           "name": "Ritesh",
           "level": 3.5,
-          "price": 35000,
+          "price": 45000,
           "retained": true
         },
         {
           "name": "Filipe",
           "level": 3.6,
-          "price": 36000,
+          "price": 46000,
           "retained": true
         }
       ]
@@ -248,38 +248,38 @@
       "id": "pirates",
       "name": "Pantera Padel",
       "isUser": false,
-      "spent": 208000,
-      "remaining": 442000,
+      "spent": 258000,
+      "remaining": 392000,
       "spotsLeft": 7,
       "roster": [
         {
           "name": "Aston Alexander",
           "level": 4.4,
-          "price": 44000,
+          "price": 54000,
           "retained": true
         },
         {
           "name": "Diego De Abreu",
           "level": 4.5,
-          "price": 45000,
+          "price": 55000,
           "retained": true
         },
         {
           "name": "Wayne",
           "level": 3.6,
-          "price": 36000,
+          "price": 46000,
           "retained": true
         },
         {
           "name": "Jarryd Meyer",
           "level": 4,
-          "price": 40000,
+          "price": 50000,
           "retained": true
         },
         {
           "name": "Saul Rosen",
           "level": 4.3,
-          "price": 43000,
+          "price": 53000,
           "retained": true
         }
       ]
@@ -288,38 +288,38 @@
       "id": "dons",
       "name": "Dons",
       "isUser": false,
-      "spent": 196000,
-      "remaining": 454000,
+      "spent": 246000,
+      "remaining": 404000,
       "spotsLeft": 7,
       "roster": [
         {
           "name": "Junaid Cariem",
           "level": 3,
-          "price": 30000,
+          "price": 40000,
           "retained": true
         },
         {
           "name": "Rashid Bhika",
           "level": 4.5,
-          "price": 45000,
+          "price": 55000,
           "retained": true
         },
         {
           "name": "Richard Kuo",
           "level": 4,
-          "price": 40000,
+          "price": 50000,
           "retained": true
         },
         {
           "name": "Evashen",
           "level": 3.8,
-          "price": 38000,
+          "price": 48000,
           "retained": true
         },
         {
           "name": "Michael Huang",
           "level": 4.3,
-          "price": 43000,
+          "price": 53000,
           "retained": true
         }
       ]
@@ -328,38 +328,38 @@
       "id": "isorade-vipers",
       "name": "ISORADE VIPERS",
       "isUser": false,
-      "spent": 191000,
-      "remaining": 459000,
+      "spent": 241000,
+      "remaining": 409000,
       "spotsLeft": 7,
       "roster": [
         {
           "name": "Lee Aronson",
           "level": 4.3,
-          "price": 43000,
+          "price": 53000,
           "retained": true
         },
         {
           "name": "Yahya Bhabha",
           "level": 3.9,
-          "price": 39000,
+          "price": 49000,
           "retained": true
         },
         {
           "name": "Brandon V Heerden",
           "level": 4.5,
-          "price": 45000,
+          "price": 55000,
           "retained": true
         },
         {
           "name": "Miki Garda",
           "level": 3.5,
-          "price": 35000,
+          "price": 45000,
           "retained": true
         },
         {
           "name": "Dan Garda",
           "level": 2.9,
-          "price": 29000,
+          "price": 39000,
           "retained": true
         }
       ]
@@ -368,38 +368,38 @@
       "id": "solara",
       "name": "Claw XII",
       "isUser": false,
-      "spent": 164000,
-      "remaining": 486000,
+      "spent": 214000,
+      "remaining": 436000,
       "spotsLeft": 7,
       "roster": [
         {
           "name": "Mahin Dharmavir",
           "level": 2.8,
-          "price": 28000,
+          "price": 38000,
           "retained": true
         },
         {
           "name": "Neeren Chetty",
           "level": 3.4,
-          "price": 34000,
+          "price": 44000,
           "retained": true
         },
         {
           "name": "Talha Carrim",
           "level": 3.2,
-          "price": 32000,
+          "price": 42000,
           "retained": true
         },
         {
           "name": "Preshen Padayachee",
           "level": 2.8,
-          "price": 28000,
+          "price": 38000,
           "retained": true
         },
         {
           "name": "Vishal Dolly",
           "level": 4.2,
-          "price": 42000,
+          "price": 52000,
           "retained": true
         }
       ]
@@ -408,38 +408,38 @@
       "id": "bed-shop-dream-team",
       "name": "Bed Shop Dream Team",
       "isUser": false,
-      "spent": 213000,
-      "remaining": 437000,
+      "spent": 263000,
+      "remaining": 387000,
       "spotsLeft": 7,
       "roster": [
         {
           "name": "Manu Suliman",
           "level": 4.3,
-          "price": 43000,
+          "price": 53000,
           "retained": true
         },
         {
           "name": "Muhammed Carrim",
           "level": 4.2,
-          "price": 42000,
+          "price": 52000,
           "retained": true
         },
         {
           "name": "Jerry Moola",
           "level": 4.4,
-          "price": 44000,
+          "price": 54000,
           "retained": true
         },
         {
           "name": "Amaan Tayob",
           "level": 4.5,
-          "price": 45000,
+          "price": 55000,
           "retained": true
         },
         {
           "name": "Ziyaad Sader",
           "level": 3.9,
-          "price": 39000,
+          "price": 49000,
           "retained": true
         }
       ]
@@ -518,5 +518,6 @@
     "Zaid Jacobs": "Left",
     "Muhammed Zaid Ally": "Right",
     "Salmaan Beg": "Left"
-  }
+  },
+  "passedPlayers": []
 }

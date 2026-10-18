@@ -7,28 +7,22 @@ import type { Player } from "@/types/auction";
 
 type PlayerSearchProps = {
   players: Player[];
-  soldPlayers: string[];
+  isAvailable: (name: string) => boolean;
   onSelect: (player: Player) => void;
 };
 
-export function PlayerSearch({ players, soldPlayers, onSelect }: PlayerSearchProps) {
+export function PlayerSearch({ players, isAvailable, onSelect }: PlayerSearchProps) {
   const [query, setQuery] = useState("");
-  const sold = useMemo(
-    () => new Set(soldPlayers.map((name) => name.toLowerCase())),
-    [soldPlayers],
-  );
 
   const matches = useMemo(() => {
     const needle = query.trim().toLowerCase();
     if (needle.length < 1) return [];
     return players
       .filter(
-        (player) =>
-          !sold.has(player.name.toLowerCase()) &&
-          player.name.toLowerCase().includes(needle),
+        (player) => isAvailable(player.name) && player.name.toLowerCase().includes(needle),
       )
       .slice(0, 8);
-  }, [players, query, sold]);
+  }, [isAvailable, players, query]);
 
   return (
     <div className="relative">

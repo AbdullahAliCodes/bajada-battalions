@@ -138,6 +138,16 @@ async function main() {
   for (const [name, side] of Object.entries(state.playerSides ?? {})) {
     remember(name, { side });
   }
+  for (const name of state.passedPlayers ?? []) {
+    const existing = [...byName.values()].find((row) => namesMatch(row.name, name));
+    if (existing?.team_id) continue;
+    remember(name, {
+      status: "Lost",
+      team_id: null,
+      price: null,
+      retained: false,
+    });
+  }
 
   const playerWrite = await supabase.from("players").upsert(
     [...byName.values()].map((row) => ({
