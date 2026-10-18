@@ -8,68 +8,82 @@ import { formatRand } from "@/lib/format";
 type HeaderProps = {
   remaining: number;
   spotsLeft: number;
-  tab: "floor" | "targets";
-  onTabChange: (tab: "floor" | "targets") => void;
-  grid?: ReactNode;
 };
 
-export function Header({ remaining, spotsLeft, tab, onTabChange, grid }: HeaderProps) {
+type AuctionTabsProps = {
+  tab: "floor" | "targets";
+  onTabChange: (tab: "floor" | "targets") => void;
+};
+
+export function Header({ remaining, spotsLeft }: HeaderProps) {
   return (
-    <header className="border-b border-zinc-200 bg-white/80 p-4 pt-[max(1rem,env(safe-area-inset-top))] backdrop-blur-md dark:border-zinc-800 dark:bg-black/80">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
-            Team Padel Premier
-          </p>
-          <h1 className="mt-1 text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-            {USER_TEAM_NAME}
-          </h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">Live auction desk</p>
+    <header className="sticky top-0 z-50 border-b border-zinc-200/80 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80">
+      <div className="mx-auto max-w-4xl px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-5 sm:px-6 lg:px-8">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-400">
+              Team Padel Premier
+            </p>
+            <h1 className="mt-1 text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+              {USER_TEAM_NAME}
+            </h1>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">Live auction desk</p>
+          </div>
+          <ThemeToggle />
         </div>
-        <ThemeToggle />
+
+        <div className="mt-6 flex items-end justify-between gap-4">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+              Remaining
+            </p>
+            <p className="text-4xl font-extrabold tracking-tight text-zinc-900 tabular-nums dark:text-zinc-50">
+              {formatRand(remaining)}
+            </p>
+          </div>
+          <div className="mb-1 rounded-full border border-zinc-200 bg-white px-3 py-1 text-sm font-medium text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300">
+            {spotsLeft} spot{spotsLeft === 1 ? "" : "s"} left
+          </div>
+        </div>
       </div>
-
-      <div className="mt-5 flex items-end justify-between gap-3">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            Remaining
-          </p>
-          <p className="text-4xl font-extrabold tracking-tight text-zinc-900 tabular-nums dark:text-zinc-50">
-            {formatRand(remaining)}
-          </p>
-        </div>
-        <div className="mb-1 rounded-full border border-zinc-200 px-3 py-1 text-sm font-medium text-zinc-700 dark:border-zinc-800 dark:text-zinc-300">
-          {spotsLeft} spot{spotsLeft === 1 ? "" : "s"} left
-        </div>
-      </div>
-
-      {grid}
-
-      <nav className="flex rounded-lg bg-zinc-100 p-1 dark:bg-zinc-900">
-        <button
-          type="button"
-          onClick={() => onTabChange("floor")}
-          className={`flex-1 rounded-md px-4 py-2 text-center text-sm transition-colors ${
-            tab === "floor"
-              ? "bg-white font-medium text-zinc-900 shadow-sm dark:bg-zinc-950 dark:text-zinc-50"
-              : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
-          }`}
-        >
-          Auction Floor
-        </button>
-        <button
-          type="button"
-          onClick={() => onTabChange("targets")}
-          className={`flex-1 rounded-md px-4 py-2 text-center text-sm transition-colors ${
-            tab === "targets"
-              ? "bg-white font-medium text-zinc-900 shadow-sm dark:bg-zinc-950 dark:text-zinc-50"
-              : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
-          }`}
-        >
-          Target List
-        </button>
-      </nav>
     </header>
+  );
+}
+
+export function AuctionTabs({ tab, onTabChange }: AuctionTabsProps) {
+  return (
+    <nav className="mx-auto mb-8 flex w-full rounded-xl bg-zinc-200/60 p-1.5 backdrop-blur-sm dark:bg-zinc-800/60 sm:w-auto">
+      <TabButton active={tab === "floor"} onClick={() => onTabChange("floor")}>
+        Auction Floor
+      </TabButton>
+      <TabButton active={tab === "targets"} onClick={() => onTabChange("targets")}>
+        Target List
+      </TabButton>
+    </nav>
+  );
+}
+
+function TabButton({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex-1 rounded-lg px-6 py-2.5 text-sm font-medium transition-all sm:flex-none ${
+        active
+          ? "border border-black/5 bg-white text-zinc-900 shadow-sm dark:border-white/5 dark:bg-zinc-900 dark:text-zinc-50"
+          : "border border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+      }`}
+    >
+      {children}
+    </button>
   );
 }
 

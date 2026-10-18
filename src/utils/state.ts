@@ -15,7 +15,6 @@ import { namesMatch } from "@/lib/targets";
 import { createServerSupabase } from "@/utils/supabase";
 import type {
   AuctionState,
-  Formation,
   PairKey,
   PlayerSide,
   RosterPlayer,
@@ -84,6 +83,14 @@ function bracketForPair(pair: PairKey): "upper" | "lower" | "bench" {
   if (pair === "pair1" || pair === "pair2") return "upper";
   if (pair === "pair3" || pair === "pair4") return "lower";
   return "bench";
+}
+
+function pairNumber(pair: PairKey): number {
+  return Number(pair.replace("pair", ""));
+}
+
+function playerBaseValue(level: number | null): number | null {
+  return level == null ? null : Math.round(level * 10_000);
 }
 
 function uniqueNames(names: string[] | undefined): string[] {
@@ -242,7 +249,7 @@ async function fetchDbSnapshot() {
   const supabase = createServerSupabase();
   const [teamsRes, playersRes, formationsRes] = await Promise.all([
     supabase.from("teams").select("*").order("sort_order"),
-    supabase.from("players").select("*"),
+    supabase.from("players").select("*").order("name"),
     supabase
       .from("formations")
       .select("*, right_player:right_player_id(name), left_player:left_player_id(name)"),
@@ -261,7 +268,9 @@ async function fetchDbSnapshot() {
 export async function readState(): Promise<AuctionState> {
   const { teams, players, formations } = await fetchDbSnapshot();
   if (teams.length === 0) {
-    throw new Error("No teams in Supabase. Run scripts/schema.sql then npm run seed.");
+    throw new Error(
+      "No teams in Supabase. Run scripts/migrate-existing.sql (or schema.sql) then npm run seed.",
+    );
   }
   return assembleState(teams, players, formations);
 }
@@ -336,7 +345,7 @@ export async function writeState(state: AuctionState): Promise<AuctionState> {
   for (const player of currentPlayers) {
     remember(player.name, {
       level: toLevel(player.level) ?? null,
-      side: "Unknown",
+      side: player.side ?? "Unknown",
       status: "available",
       team_id: null,
       price: null,
@@ -349,7 +358,7 @@ export async function writeState(state: AuctionState): Promise<AuctionState> {
   for (const team of next.teams) {
     for (const player of team.roster) {
       remember(player.name, {
-        level: player.level ?? findNamed(currentPlayers, player.name)?.level ?? null,
+        level: player.level ?? toLevel(findNamed(currentPlayers, player.name)?.level) ?? null,
         side: player.side ?? lookupSide(player.name, next.playerSides) ?? "Unknown",
         status: team.isUser ? "Acquired" : "Lost",
         team_id: team.id,
@@ -373,6 +382,7 @@ export async function writeState(state: AuctionState): Promise<AuctionState> {
   const playerRows = [...desired.values()].map((row) => ({
     ...row,
     level: row.level,
+    base_value: playerBaseValue(row.level),
     updated_at: new Date().toISOString(),
   }));
   const playerWrite = await supabase.from("players").upsert(playerRows, { onConflict: "name" });
@@ -387,6 +397,7 @@ export async function writeState(state: AuctionState): Promise<AuctionState> {
   const formationRows = PAIR_KEYS.map((pair) => ({
     team_id: USER_TEAM_ID,
     pair_key: pair,
+    pair_number: pairNumber(pair),
     bracket: bracketForPair(pair),
     right_player_id: formation[pair].right
       ? findNamed(players, formation[pair].right!)?.id ?? null

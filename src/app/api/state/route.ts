@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
+    // Assembled from teams, players, and formations (with right/left player names).
     const state = await readState();
     return NextResponse.json(state, {
       headers: { "Cache-Control": "no-store" },

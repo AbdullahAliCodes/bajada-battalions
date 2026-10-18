@@ -33,6 +33,7 @@ create table if not exists public.formations (
   bracket text not null check (bracket in ('upper', 'lower', 'bench')),
   right_player_id uuid references public.players (id) on delete set null,
   left_player_id uuid references public.players (id) on delete set null,
+  updated_at timestamptz not null default now(),
   unique (team_id, pair_key)
 );
 

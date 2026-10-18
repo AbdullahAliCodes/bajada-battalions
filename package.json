@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "convert-players": "python3 scripts/convert_players.py"
+    "convert-players": "python3 scripts/convert_players.py",
+    "seed": "tsx scripts/seed-supabase.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",

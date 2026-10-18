@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { baseValue } from "@/lib/constants";
 import { formatRand, parseRand } from "@/lib/format";
 import { SideToggle } from "@/components/SideToggle";
@@ -22,7 +23,7 @@ type AuctionActionCardProps = {
 };
 
 const fieldClassName =
-  "w-full rounded-lg border border-zinc-300 bg-transparent px-4 py-3 text-base text-zinc-900 transition-all placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:ring-zinc-100";
+  "w-full rounded-lg border border-zinc-300 bg-white px-4 py-3 text-base text-zinc-900 transition-all placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:ring-zinc-100";
 
 export function AuctionActionCard({
   player,
@@ -85,8 +86,8 @@ export function AuctionActionCard({
   }
 
   return (
-    <section className="mb-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-      <div className="flex items-start justify-between gap-3">
+    <section className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-[11px] font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             Now auctioning
@@ -113,7 +114,7 @@ export function AuctionActionCard({
         </div>
       </div>
 
-      <div className="mt-3 flex items-center justify-between gap-3">
+      <div className="mt-4 flex items-center justify-between gap-4">
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
           Base value{" "}
           <span className="font-semibold text-zinc-900 dark:text-zinc-50">{formatRand(value)}</span>
@@ -122,15 +123,25 @@ export function AuctionActionCard({
         <SideToggle value={side} onChange={onSideChange} />
       </div>
 
-      <div className="mt-4 rounded-xl border border-zinc-200 bg-zinc-50 p-3 text-sm leading-relaxed text-zinc-700 dark:border-zinc-800 dark:bg-black dark:text-zinc-300">
+      <div
+        className="mt-5 rounded-xl border border-zinc-200/80 bg-zinc-50 p-4 text-sm leading-relaxed text-zinc-700 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300"
+        aria-busy={adviceLoading}
+      >
         <p className="mb-1 text-[11px] font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
           AI bid advice
         </p>
-        <p>{adviceLoading ? "Reading the room…" : advice || "Select a player to get advice."}</p>
+        {advice && !adviceLoading ? (
+          <p>{advice}</p>
+        ) : (
+          <p className="inline-flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
+            <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+            <span className="animate-pulse">Consulting AI...</span>
+          </p>
+        )}
       </div>
 
       {mode ? (
-        <div className="mt-4 space-y-3">
+        <div className="mt-5 space-y-4">
           {mode === "opponent" && (
             <select
               value={teamId}
@@ -155,7 +166,7 @@ export function AuctionActionCard({
             className={fieldClassName}
           />
           {error && <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">{error}</p>}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               disabled={busy}
@@ -178,7 +189,7 @@ export function AuctionActionCard({
           </div>
         </div>
       ) : (
-        <div className="mt-4 grid grid-cols-1 gap-2">
+        <div className="mt-5 grid grid-cols-1 gap-3">
           <button
             type="button"
             disabled={busy || userTeam.spotsLeft <= 0}

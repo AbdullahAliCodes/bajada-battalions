@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
-/* class-based dark mode for next-themes */
+/* class-based dark mode for next-themes. Page canvas is zinc-50 / zinc-950. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
+  --background: #fafafa;
   --foreground: #18181b;
   color-scheme: light;
 }
 
 .dark {
-  --background: #000000;
+  --background: #09090b;
   --foreground: #fafafa;
   color-scheme: dark;
 }

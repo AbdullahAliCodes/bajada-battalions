@@ -5,15 +5,33 @@ Mobile-first live auction assistant for **Team Padel Premier**. Your team is **B
 - Budget: **R650,000**
 - Roster: **12** (5 retained, **7** to buy)
 - Base price: Playtomic level × **R10,000**
-- Persistence: `data/state.json` via `/api/state` (no database)
-- Player pool: `data/players.json`
+- Persistence: Supabase Postgres via `/api/state`
+- Player pool: `players` table (seeded from `data/players.json`)
+
+## Supabase (required for Vercel)
+
+1. Create a project at [supabase.com](https://supabase.com).
+2. Schema:
+   - **Reset and start clean:** run `scripts/reset-and-create.sql`.
+   - **Empty project (no old tables):** run `scripts/schema.sql`.
+   - **Old tables with data to keep:** run `scripts/migrate-existing.sql`.
+3. Copy `.env.example` to `.env.local` and set:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY` (server writes and seed; keep this off the client)
+   - `OPENAI_API_KEY` (optional; fallback advice works without it)
+4. Seed from the current Excel export and `data/state.json`:
+
+```bash
+npm run seed
+```
 
 ## Run
 
 ```bash
 cp .env.example .env.local
-# add your OpenAI key to .env.local
 npm install
+npm run seed
 npm run dev
 ```
 

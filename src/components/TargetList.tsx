@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { X } from "lucide-react";
 import { baseValue } from "@/lib/constants";
 import { formatRand } from "@/lib/format";
 import {
@@ -29,7 +30,10 @@ const STATUS_META: Record<TargetStatus, { label: string; className: string }> = 
 };
 
 const fieldClassName =
-  "w-full rounded-lg border border-zinc-300 bg-transparent px-4 py-3 text-base text-zinc-900 transition-all placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:ring-zinc-100";
+  "w-full rounded-lg border border-zinc-300 bg-white px-4 py-3 text-base text-zinc-900 transition-all placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:ring-zinc-100";
+
+const cardClassName =
+  "rounded-xl border border-zinc-200/80 bg-white p-5 shadow-sm transition-all duration-200 hover:border-zinc-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700";
 
 export function TargetList({ players, state, onAdd, onRemove, onSideChange }: TargetListProps) {
   const [query, setQuery] = useState("");
@@ -56,7 +60,7 @@ export function TargetList({ players, state, onAdd, onRemove, onSideChange }: Ta
   const reserve = reservedMustBuyBudget(state.must_buy, state, players);
 
   return (
-    <section className="space-y-5">
+    <section className="space-y-12">
       <div>
         <h2 className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
           Target List
@@ -73,7 +77,7 @@ export function TargetList({ players, state, onAdd, onRemove, onSideChange }: Ta
         </p>
       </div>
 
-      <div className="grid grid-cols-[1fr_auto] gap-2">
+      <div className="grid grid-cols-[1fr_auto] gap-4">
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
@@ -83,7 +87,7 @@ export function TargetList({ players, state, onAdd, onRemove, onSideChange }: Ta
         <select
           value={list}
           onChange={(event) => setList(event.target.value as TargetKind)}
-          className="rounded-lg border border-zinc-300 bg-transparent px-3 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:text-zinc-50 dark:focus:ring-zinc-100"
+          className="rounded-lg border border-zinc-300 bg-white px-3 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:ring-zinc-100"
         >
           <option value="must_buy">Must Buy</option>
           <option value="wishlist">Wishlist</option>
@@ -91,16 +95,16 @@ export function TargetList({ players, state, onAdd, onRemove, onSideChange }: Ta
       </div>
 
       {suggestions.length > 0 && (
-        <ul className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+        <ul className="space-y-4">
           {suggestions.map((player) => (
-            <li key={player.name} className="border-b border-zinc-200 last:border-b-0 dark:border-zinc-800">
+            <li key={player.name}>
               <button
                 type="button"
                 onClick={() => {
                   onAdd(player.name, list);
                   setQuery("");
                 }}
-                className="flex w-full cursor-pointer items-center justify-between px-4 py-3 text-left transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                className={`flex w-full cursor-pointer items-center justify-between gap-4 text-left ${cardClassName}`}
               >
                 <span>
                   <span className="block text-zinc-900 dark:text-zinc-50">{player.name}</span>
@@ -158,15 +162,15 @@ function TargetSection({
 }) {
   return (
     <div>
-      <div className="mb-2 flex items-baseline justify-between">
+      <div className="mb-4 flex items-baseline justify-between">
         <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">{title}</h3>
         <p className="text-[11px] uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
           {priority}
         </p>
       </div>
-      <ul className="space-y-2">
+      <ul className="space-y-4">
         {names.length === 0 && (
-          <li className="rounded-xl border border-dashed border-zinc-200 px-4 py-6 text-center text-sm text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+          <li className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50/50 px-5 py-8 text-center text-sm text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950/50 dark:text-zinc-400">
             No {title.toLowerCase()} names yet.
           </li>
         )}
@@ -176,11 +180,8 @@ function TargetSection({
           const meta = STATUS_META[status];
           const value = playerBaseValue(name, players);
           return (
-            <li
-              key={name}
-              className="mb-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950"
-            >
-              <div className="flex items-center justify-between gap-3">
+            <li key={name} className={cardClassName}>
+              <div className="flex items-start justify-between gap-4">
                 <span>
                   <span className="block font-medium text-zinc-900 dark:text-zinc-50">{name}</span>
                   <span className="text-xs text-zinc-500 dark:text-zinc-400">
@@ -192,13 +193,14 @@ function TargetSection({
                 </span>
                 <button
                   type="button"
+                  aria-label={`Remove ${name}`}
                   onClick={() => onRemove(name)}
-                  className="text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-50"
+                  className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
                 >
-                  Remove
+                  <X size={16} />
                 </button>
               </div>
-              <div className="mt-3 flex items-center justify-between">
+              <div className="mt-4 flex items-center justify-between gap-4">
                 <p className="text-xs font-medium uppercase tracking-wide text-zinc-500">Side</p>
                 <SideToggle
                   value={getPlayerSide(name, auctionState)}

@@ -7,6 +7,10 @@ export const dynamic = "force-dynamic";
 
 const SIDES: PlayerSide[] = ["Right", "Left", "Unknown"];
 
+export async function PATCH(request: Request) {
+  return POST(request);
+}
+
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as { name?: string; side?: PlayerSide };
