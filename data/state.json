@@ -4,42 +4,42 @@
       "id": "bajada-batallions",
       "name": "Bajada Batallions",
       "isUser": true,
-      "spent": 279800,
-      "remaining": 370200,
+      "spent": 247000,
+      "remaining": 403000,
       "spotsLeft": 6,
       "roster": [
         {
           "name": "Mohammed Wajoodeen",
           "level": 4.5,
-          "price": 55000,
+          "price": 45000,
           "retained": true,
           "side": "Left"
         },
         {
           "name": "Ahmed Ghaff",
-          "level": 3.28,
-          "price": 42800,
+          "level": 4,
+          "price": 40000,
           "retained": true,
           "side": "Right"
         },
         {
           "name": "Morgan Booysen",
-          "level": 3.63,
-          "price": 46300,
+          "level": 3.6,
+          "price": 36000,
           "retained": true,
           "side": "Right"
         },
         {
-          "name": "Mohammed Rawat",
-          "level": 2.74,
-          "price": 37400,
+          "name": "Zaid Jacobs",
+          "level": 3.3,
+          "price": 33000,
           "retained": true,
           "side": "Left"
         },
         {
-          "name": "Zaid Jacobs",
-          "level": 3.33,
-          "price": 43300,
+          "name": "Mohammed Rawat",
+          "level": 3.8,
+          "price": 38000,
           "retained": true,
           "side": "Left"
         },
@@ -99,7 +99,7 @@
           "retained": true
         },
         {
-          "name": "Zaid Cassim",
+          "name": "Zaid Hassim",
           "level": 4.4,
           "price": 44000,
           "retained": true
@@ -133,19 +133,25 @@
       "spotsLeft": 7,
       "roster": [
         {
-          "name": "Humza Hussain",
-          "level": 3.3,
-          "price": 33000,
+          "name": "Luca Radmanovic",
+          "level": 4.5,
+          "price": 45000,
           "retained": true
         },
         {
-          "name": "Marco Da Costa",
-          "level": 4,
-          "price": 40000,
+          "name": "Moe Eb",
+          "level": 3.5,
+          "price": 35000,
           "retained": true
         },
         {
-          "name": "Farid Woan",
+          "name": "Alessio",
+          "level": 3.8,
+          "price": 38000,
+          "retained": true
+        },
+        {
+          "name": "Ridwaan Patel",
           "level": 3.5,
           "price": 35000,
           "retained": true
@@ -154,12 +160,6 @@
           "name": "Rio Constantine",
           "level": 3.8,
           "price": 38000,
-          "retained": true
-        },
-        {
-          "name": "Jonty Matthys",
-          "level": 4.5,
-          "price": 45000,
           "retained": true
         }
       ]
@@ -246,40 +246,40 @@
     },
     {
       "id": "pirates",
-      "name": "Pirates",
+      "name": "Pantera Padel",
       "isUser": false,
-      "spent": 164000,
-      "remaining": 486000,
+      "spent": 208000,
+      "remaining": 442000,
       "spotsLeft": 7,
       "roster": [
         {
-          "name": "Ziyaad Moosa",
-          "level": 3,
-          "price": 30000,
+          "name": "Aston Alexander",
+          "level": 4.4,
+          "price": 44000,
           "retained": true
         },
         {
-          "name": "Muhammed Patel",
-          "level": 3.5,
-          "price": 35000,
+          "name": "Diego De Abreu",
+          "level": 4.5,
+          "price": 45000,
           "retained": true
         },
         {
-          "name": "Stillz Jnr",
-          "level": 3.2,
-          "price": 32000,
+          "name": "Wayne",
+          "level": 3.6,
+          "price": 36000,
           "retained": true
         },
         {
-          "name": "Muaz Bodhania",
-          "level": 3.4,
-          "price": 34000,
+          "name": "Jarryd Meyer",
+          "level": 4,
+          "price": 40000,
           "retained": true
         },
         {
-          "name": "Muhammed Hansa",
-          "level": 3.3,
-          "price": 33000,
+          "name": "Saul Rosen",
+          "level": 4.3,
+          "price": 43000,
           "retained": true
         }
       ]
@@ -288,14 +288,14 @@
       "id": "dons",
       "name": "Dons",
       "isUser": false,
-      "spent": 204000,
-      "remaining": 446000,
+      "spent": 196000,
+      "remaining": 454000,
       "spotsLeft": 7,
       "roster": [
         {
-          "name": "Manny",
-          "level": 4.3,
-          "price": 43000,
+          "name": "Junaid Cariem",
+          "level": 3,
+          "price": 30000,
           "retained": true
         },
         {
@@ -311,9 +311,9 @@
           "retained": true
         },
         {
-          "name": "Rieza Adamjee",
-          "level": 3.3,
-          "price": 33000,
+          "name": "Evashen",
+          "level": 3.8,
+          "price": 38000,
           "retained": true
         },
         {
@@ -339,13 +339,13 @@
           "retained": true
         },
         {
-          "name": "Yahya Chetty",
+          "name": "Yahya Bhabha",
           "level": 3.9,
           "price": 39000,
           "retained": true
         },
         {
-          "name": "Brandon Heerden",
+          "name": "Brandon V Heerden",
           "level": 4.5,
           "price": 45000,
           "retained": true
@@ -366,7 +366,7 @@
     },
     {
       "id": "solara",
-      "name": "Solara",
+      "name": "Claw XII",
       "isUser": false,
       "spent": 164000,
       "remaining": 486000,
@@ -391,7 +391,7 @@
           "retained": true
         },
         {
-          "name": "Peshen Padaychee",
+          "name": "Preshen Padayachee",
           "level": 2.8,
           "price": 28000,
           "retained": true
@@ -413,7 +413,7 @@
       "spotsLeft": 7,
       "roster": [
         {
-          "name": "Mannu Suliman",
+          "name": "Manu Suliman",
           "level": 4.3,
           "price": 43000,
           "retained": true
@@ -462,15 +462,10 @@
     "Zaid Jacobs",
     "Nabil Jeewa",
     "Uzzi Kazie",
-    "Zaid Cassim",
     "Ahmed Motala",
     "Shaheen Amra",
-    "Humza Hussain",
-    "Marco Da Costa",
     "Marco Da Costa Dias",
-    "Farid Woan",
     "Rio Constantine",
-    "Jonty Matthys",
     "Hamza Peer",
     "Muzi Khan",
     "Raza Muhammed",
@@ -481,33 +476,38 @@
     "Prev",
     "Ritesh",
     "Filipe",
-    "Ziyaad Moosa",
-    "Muhammed Patel",
-    "Stillz Jnr",
-    "Muaz Bodhania",
-    "Muhammed Hansa",
-    "Manny",
     "Rashid Bhika",
     "Richard Kuo",
-    "Rieza Adamjee",
     "Michael Huang",
     "Lee Aronson",
-    "Yahya Chetty",
-    "Brandon Heerden",
     "Miki Garda",
     "Dan Garda",
     "Mahin Dharmavir",
     "Neeren Chetty",
     "Talha Carrim",
-    "Peshen Padaychee",
     "Vishal Dolly",
-    "Mannu Suliman",
     "Muhammed Carrim",
     "Jerry Moola",
     "Amaan Tayob",
     "Ziyaad Sader",
     "Muhammad Laher (ML10)",
-    "Abdurrahmaan Omar"
+    "Abdurrahmaan Omar",
+    "Zaid Hassim",
+    "Luca Radmanovic",
+    "Moe Eb",
+    "Alessio",
+    "Ridwaan Patel",
+    "Aston Alexander",
+    "Diego De Abreu",
+    "Wayne",
+    "Jarryd Meyer",
+    "Saul Rosen",
+    "Junaid Cariem",
+    "Evashen",
+    "Yahya Bhabha",
+    "Brandon V Heerden",
+    "Preshen Padayachee",
+    "Manu Suliman"
   ],
   "playerSides": {
     "Ahmed Ghaff": "Right",
