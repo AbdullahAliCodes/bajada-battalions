@@ -53,9 +53,10 @@ export function BudgetEstimator({ state, players }: BudgetEstimatorProps) {
   const [wishPrices, setWishPrices] = useState<Record<string, string>>({});
   const [selected, setSelected] = useState("");
   const [openSections, setOpenSections] = useState({
-    retained: true,
-    must: true,
-    wish: true,
+    retained: false,
+    must: false,
+    wish: false,
+    totals: false,
   });
 
   useEffect(() => {
@@ -352,40 +353,45 @@ export function BudgetEstimator({ state, players }: BudgetEstimatorProps) {
 
       <aside
         aria-label="Estimate totals"
-        className={`${cardClassName} order-1 lg:sticky lg:top-56 lg:order-2`}
+        className="order-1 overflow-hidden rounded-xl border border-zinc-200/80 bg-white shadow-sm lg:sticky lg:top-56 lg:order-2 dark:border-zinc-800 dark:bg-zinc-900"
       >
-        <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-          Remaining
-        </p>
-        <p className="mt-1 text-4xl font-extrabold tracking-tight text-zinc-900 tabular-nums dark:text-zinc-50">
-          {formatRand(totals.remaining)}
-        </p>
-        {totals.remaining < 0 && (
-          <p className="mt-2 text-sm font-medium text-zinc-900 dark:text-zinc-50">
-            Over budget by {formatRand(Math.abs(totals.remaining))}
-          </p>
-        )}
-
-        <dl className="mt-6 space-y-3 text-sm">
-          <SummaryLine label="Total spend" value={formatRand(totals.spend)} strong />
-          <SummaryLine label="Retained" value={formatRand(totals.retainedSpend)} />
-          <SummaryLine label="Must buys" value={formatRand(totals.mustSpend)} />
-          <SummaryLine label="Wishlist" value={formatRand(totals.wishSpend)} />
-          {totals.otherCount > 0 && (
-            <SummaryLine label="Already bought" value={formatRand(totals.otherSpend)} />
+        <EstimateSection
+          title="Totals"
+          description="Budget remaining"
+          total={totals.remaining}
+          prominent
+          open={openSections.totals}
+          onToggle={() =>
+            setOpenSections((current) => ({ ...current, totals: !current.totals }))
+          }
+        >
+          {totals.remaining < 0 && (
+            <p className="mb-4 text-sm font-medium text-zinc-900 dark:text-zinc-50">
+              Over budget by {formatRand(Math.abs(totals.remaining))}
+            </p>
           )}
-          <SummaryLine
-            label="Players"
-            value={`${totals.planned} of ${ROSTER_SIZE}`}
-          />
-          <SummaryLine
-            label="Spots left"
-            value={totals.spotsLeft < 0 ? `${totals.spotsLeft} over the roster` : String(totals.spotsLeft)}
-          />
-          {totals.perSpot != null && (
-            <SummaryLine label="Left per open spot" value={formatRand(totals.perSpot)} />
-          )}
-        </dl>
+          <dl className="space-y-3 text-sm">
+            <SummaryLine label="Total spend" value={formatRand(totals.spend)} strong />
+            <SummaryLine label="Retained" value={formatRand(totals.retainedSpend)} />
+            <SummaryLine label="Must buys" value={formatRand(totals.mustSpend)} />
+            <SummaryLine label="Wishlist" value={formatRand(totals.wishSpend)} />
+            {totals.otherCount > 0 && (
+              <SummaryLine label="Already bought" value={formatRand(totals.otherSpend)} />
+            )}
+            <SummaryLine label="Players" value={`${totals.planned} of ${ROSTER_SIZE}`} />
+            <SummaryLine
+              label="Spots left"
+              value={
+                totals.spotsLeft < 0
+                  ? `${totals.spotsLeft} over the roster`
+                  : String(totals.spotsLeft)
+              }
+            />
+            {totals.perSpot != null && (
+              <SummaryLine label="Left per open spot" value={formatRand(totals.perSpot)} />
+            )}
+          </dl>
+        </EstimateSection>
       </aside>
     </div>
   );
@@ -395,6 +401,7 @@ function EstimateSection({
   title,
   description,
   total,
+  prominent = false,
   open,
   onToggle,
   children,
@@ -402,6 +409,7 @@ function EstimateSection({
   title: string;
   description: string;
   total: number;
+  prominent?: boolean;
   open: boolean;
   onToggle: () => void;
   children: ReactNode;
@@ -425,7 +433,11 @@ function EstimateSection({
             <span className="mt-1 block text-sm text-zinc-500 dark:text-zinc-400">{description}</span>
           </span>
           <span className="flex shrink-0 items-center gap-3">
-            <span className="text-sm font-bold text-zinc-900 tabular-nums dark:text-zinc-50">
+            <span
+              className={`text-zinc-900 tabular-nums dark:text-zinc-50 ${
+                prominent ? "text-xl font-extrabold" : "text-sm font-bold"
+              }`}
+            >
               {formatRand(total)}
             </span>
             <ChevronDown
