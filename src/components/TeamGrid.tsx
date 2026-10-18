@@ -2,9 +2,11 @@
 
 import { User, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { USER_TEAM_ID } from "@/lib/constants";
 import { PAIR_KEYS, shortName, slotCandidates } from "@/lib/formation";
-import { targetStatus } from "@/lib/targets";
-import type { AuctionState, PairKey } from "@/types/auction";
+import { formatRand } from "@/lib/format";
+import { namesMatch } from "@/lib/targets";
+import type { AuctionState, PairKey, RosterPlayer } from "@/types/auction";
 
 type TeamGridProps = {
   state: AuctionState;
@@ -17,7 +19,8 @@ export function TeamGrid({ state, onPlace }: TeamGridProps) {
   const [openSlot, setOpenSlot] = useState<{ pair: PairKey; side: "Right" | "Left" } | null>(
     null,
   );
-  const formation = state.teams.find((team) => team.isUser)?.formation;
+  const userTeam = state.teams.find((team) => team.id === USER_TEAM_ID);
+  const formation = userTeam?.formation;
   const candidates = openSlot ? slotCandidates(state) : [];
 
   useEffect(() => {
@@ -31,7 +34,12 @@ export function TeamGrid({ state, onPlace }: TeamGridProps) {
     return () => window.removeEventListener("pointerdown", onPointerDown);
   }, [openSlot]);
 
-  if (!formation) return null;
+  if (!formation || !userTeam) return null;
+
+  const placed = PAIR_KEYS.flatMap((pair) => [formation[pair].right, formation[pair].left]);
+  const unplaced = userTeam.roster.filter(
+    (player) => !placed.some((name) => name && namesMatch(name, player.name)),
+  );
 
   return (
     <section className="mb-12">
@@ -55,13 +63,14 @@ export function TeamGrid({ state, onPlace }: TeamGridProps) {
         >
           {PAIR_KEYS.map((pair) => {
             const name = row === "Right" ? formation[pair].right : formation[pair].left;
+            const rosterPlayer = name ? rosterMatch(userTeam.roster, name) : undefined;
             const open = openSlot?.pair === pair && openSlot.side === row;
             return (
               <GridCell
                 key={`${pair}-${row}`}
-                name={name}
+                name={rosterPlayer?.name ?? name}
+                price={rosterPlayer?.price ?? null}
                 side={row}
-                status={name ? targetStatus(name, state) : null}
                 open={open}
                 candidates={candidates}
                 onEmptyClick={() => setOpenSlot({ pair, side: row })}
@@ -80,14 +89,34 @@ export function TeamGrid({ state, onPlace }: TeamGridProps) {
       ))}
       </div>
       </div>
+      {unplaced.length > 0 && (
+        <div className="mt-4">
+          <p className="text-[11px] font-semibold tracking-[0.16em] text-zinc-500">NOT PLACED</p>
+          <ul className="mt-2 space-y-2">
+            {unplaced.map((player) => (
+              <li
+                key={player.name}
+                className="flex items-center justify-between gap-3 text-sm text-zinc-900 dark:text-zinc-50"
+              >
+                <span className="min-w-0 truncate">{player.name}</span>
+                <span className="shrink-0 font-semibold tabular-nums">{formatRand(player.price)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </section>
   );
 }
 
+function rosterMatch(roster: RosterPlayer[], name: string): RosterPlayer | undefined {
+  return roster.find((player) => namesMatch(player.name, name));
+}
+
 function GridCell({
   name,
+  price,
   side,
-  status,
   open,
   candidates,
   onEmptyClick,
@@ -95,8 +124,8 @@ function GridCell({
   onClear,
 }: {
   name: string | null;
+  price: number | null;
   side: "Right" | "Left";
-  status: "pending" | "acquired" | "lost" | null;
   open: boolean;
   candidates: string[];
   onEmptyClick: () => void;
@@ -104,7 +133,7 @@ function GridCell({
   onClear: () => void;
 }) {
   const badge = side === "Right" ? "[R]" : "[L]";
-  const faded = status === "lost" || status === "pending";
+  const onTeam = price != null;
 
   if (!name) {
     return (
@@ -129,13 +158,18 @@ function GridCell({
         type="button"
         onClick={onEmptyClick}
         className={`relative flex min-h-[70px] w-full min-w-0 flex-col items-center justify-center overflow-hidden rounded-xl border border-zinc-200 bg-white p-3 text-center shadow-sm dark:border-zinc-800 dark:bg-zinc-900 ${
-          faded ? "opacity-60" : ""
+          onTeam ? "" : "opacity-60"
         }`}
       >
         <User size={16} className="text-zinc-500" />
         <span className="mt-1.5 w-full truncate text-xs font-medium leading-tight text-zinc-900 dark:text-zinc-50">
           {shortName(name)}
         </span>
+        {price != null && (
+          <span className="mt-0.5 text-[10px] font-semibold tabular-nums text-zinc-900 dark:text-zinc-50">
+            {formatRand(price)}
+          </span>
+        )}
         <span className="mt-0.5 text-[10px] font-semibold tracking-wide text-zinc-500">{badge}</span>
       </button>
       <button

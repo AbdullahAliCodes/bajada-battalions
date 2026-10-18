@@ -248,7 +248,8 @@ export function dropLostFromFormation(state: AuctionState): Formation {
   for (const key of PAIR_KEYS) {
     for (const side of ["right", "left"] as const) {
       const name = next[key][side];
-      if (name && targetStatus(name, state) === "lost") {
+      const passed = (state.passedPlayers ?? []).some((player) => namesMatch(player, name ?? ""));
+      if (name && (targetStatus(name, state) === "lost" || passed)) {
         next[key][side] = null;
       }
     }

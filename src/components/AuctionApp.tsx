@@ -14,6 +14,7 @@ import { USER_TEAM_ID, baseValue } from "@/lib/constants";
 import {
   applyUserFormation,
   clearNameFromFormation,
+  dropLostFromFormation,
   emptyFormation,
   getPlayerSide,
   placeInFormation,
@@ -24,6 +25,7 @@ import {
   assignRosterPlayer,
   isInPool,
   passPlayer,
+  recomputeTeam,
   releaseRosterPlayer,
   restorePassedPlayer,
 } from "@/lib/roster";
@@ -77,10 +79,14 @@ export function AuctionApp() {
   const pendingRef = useRef(0);
   const queueRef = useRef<Promise<void>>(Promise.resolve());
 
-  const userTeam = state?.teams.find((team) => team.id === USER_TEAM_ID);
-  const opponents = useMemo(
-    () => state?.teams.filter((team) => !team.isUser) ?? [],
+  const liveState = useMemo(
+    () => (state ? { ...state, teams: state.teams.map((team) => recomputeTeam(team)) } : null),
     [state],
+  );
+  const userTeam = liveState?.teams.find((team) => team.id === USER_TEAM_ID);
+  const opponents = useMemo(
+    () => liveState?.teams.filter((team) => !team.isUser) ?? [],
+    [liveState],
   );
   const maxOpponentBudget = useMemo(
     () => opponents.reduce((max, team) => Math.max(max, team.remaining), 0),
@@ -285,7 +291,8 @@ export function AuctionApp() {
     if (!current || !activePlayer) return;
     setBusy(true);
     try {
-      await persist(passPlayer(current, activePlayer.name));
+      const next = passPlayer(current, activePlayer.name);
+      await persist(applyUserFormation(next, dropLostFromFormation(next)));
       setActivePlayer(null);
       setAdvice("");
     } catch (passError) {
@@ -408,7 +415,15 @@ export function AuctionApp() {
     const current = stateRef.current;
     if (!current) return;
     try {
-      await persist(releaseRosterPlayer(current, teamId, name));
+      let next = releaseRosterPlayer(current, teamId, name);
+      if (teamId === USER_TEAM_ID && !listForPlayer(name, next.must_buy, next.wishlist)) {
+        const formation = clearNameFromFormation(
+          next.teams.find((team) => team.isUser)?.formation ?? emptyFormation(),
+          name,
+        );
+        next = applyUserFormation(next, formation);
+      }
+      await persist(next);
     } catch {
       // rolled back in commit
     }
@@ -418,7 +433,7 @@ export function AuctionApp() {
     return <AuctionSkeleton />;
   }
 
-  if (!state || !userTeam) {
+  if (!liveState || !userTeam) {
     return (
       <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-zinc-50 px-6 text-center dark:bg-zinc-950">
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -437,15 +452,11 @@ export function AuctionApp() {
 
   return (
     <div className="min-h-dvh bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
-      <Header
-        spent={userTeam.spent}
-        remaining={userTeam.remaining}
-        spotsLeft={userTeam.spotsLeft}
-      />
+      <Header team={userTeam} />
 
       <div className="mx-auto max-w-4xl px-4 pt-6 pb-12 sm:px-6 lg:px-8">
         <TeamGrid
-          state={state}
+          state={liveState}
           onPlace={(pair, side, name) => void placeOnGrid(pair, side, name)}
         />
         <AuctionTabs tab={tab} onTabChange={setTab} />
@@ -461,14 +472,14 @@ export function AuctionApp() {
         )}
 
         <div className={tab === "budget" ? undefined : "hidden"}>
-          <BudgetEstimator state={state} players={players} />
+          <BudgetEstimator state={liveState} players={players} />
         </div>
 
         {tab === "budget" ? null : tab === "floor" ? (
           <div className="space-y-12">
             <PlayerSearch
               players={players}
-              isAvailable={(name) => isInPool(name, state)}
+              isAvailable={(name) => isInPool(name, liveState)}
               onSelect={setActivePlayer}
             />
             {activePlayer ? (
@@ -476,9 +487,9 @@ export function AuctionApp() {
                 player={activePlayer}
                 userTeam={userTeam}
                 opponents={opponents}
-                listStatus={listForPlayer(activePlayer.name, state.must_buy, state.wishlist)}
-                bracket={lookupBracket(activePlayer.name, state.targetBrackets)}
-                side={getPlayerSide(activePlayer.name, state)}
+                listStatus={listForPlayer(activePlayer.name, liveState.must_buy, liveState.wishlist)}
+                bracket={lookupBracket(activePlayer.name, liveState.targetBrackets)}
+                side={getPlayerSide(activePlayer.name, liveState)}
                 onSideChange={(side) => void changeSide(activePlayer.name, side)}
                 advice={advice}
                 adviceLoading={adviceLoading}
@@ -492,12 +503,12 @@ export function AuctionApp() {
                 Search the player currently on auction.
               </p>
             )}
-            <TeamLeaderboard teams={state.teams} onRelease={(teamId, name) => void releasePlayer(teamId, name)} />
+            <TeamLeaderboard teams={liveState.teams} onRelease={(teamId, name) => void releasePlayer(teamId, name)} />
           </div>
         ) : tab === "targets" ? (
           <TargetList
             players={players}
-            state={state}
+            state={liveState}
             onAdd={(name, list, bracket) => void addTarget(name, list, bracket)}
             onRemove={(name, list) => void removeTarget(name, list)}
             onSideChange={(name, side) => void changeSide(name, side)}
@@ -505,7 +516,7 @@ export function AuctionApp() {
           />
         ) : (
           <PassedList
-            names={state.passedPlayers ?? []}
+            names={liveState.passedPlayers ?? []}
             players={players}
             onRestore={(name) => void restorePassed(name)}
           />

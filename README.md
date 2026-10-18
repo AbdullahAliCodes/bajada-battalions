@@ -3,7 +3,7 @@
 Mobile-first live auction assistant for **Team Padel Premier**. Your team is **Bajada Batallions**.
 
 - Budget: **R650,000**
-- Roster: **12** (5 retained, **7** to buy)
+- Roster: **11** (5 retained, **6** to buy)
 - Base price: Playtomic level × **R10,000**
 - Persistence: Supabase Postgres via `/api/state`
 - Player pool: `players` table (seeded from `data/players.json`)

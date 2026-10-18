@@ -5,11 +5,11 @@ import Image from "next/image";
 import { useTheme } from "next-themes";
 import { USER_TEAM_NAME } from "@/lib/constants";
 import { formatRand } from "@/lib/format";
+import { recomputeTeam } from "@/lib/roster";
+import type { Team } from "@/types/auction";
 
 type HeaderProps = {
-  spent: number;
-  remaining: number;
-  spotsLeft: number;
+  team: Team;
 };
 
 export type AuctionTab = "floor" | "targets" | "passed" | "budget";
@@ -19,7 +19,9 @@ type AuctionTabsProps = {
   onTabChange: (tab: AuctionTab) => void;
 };
 
-export function Header({ spent, remaining, spotsLeft }: HeaderProps) {
+export function Header({ team }: HeaderProps) {
+  const { spent, remaining, spotsLeft } = recomputeTeam(team);
+
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200/80 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80">
       <div className="mx-auto max-w-4xl px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-5 sm:px-6 lg:px-8">
