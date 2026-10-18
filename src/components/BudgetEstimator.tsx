@@ -357,7 +357,7 @@ export function BudgetEstimator({ state, players }: BudgetEstimatorProps) {
       >
         <EstimateSection
           title="Totals"
-          description="Budget remaining"
+          spent={totals.spend}
           total={totals.remaining}
           prominent
           open={openSections.totals}
@@ -400,6 +400,7 @@ export function BudgetEstimator({ state, players }: BudgetEstimatorProps) {
 function EstimateSection({
   title,
   description,
+  spent,
   total,
   prominent = false,
   open,
@@ -407,7 +408,8 @@ function EstimateSection({
   children,
 }: {
   title: string;
-  description: string;
+  description?: string;
+  spent?: number;
   total: number;
   prominent?: boolean;
   open: boolean;
@@ -430,15 +432,24 @@ function EstimateSection({
             <span className="block text-base font-semibold text-zinc-900 dark:text-zinc-50">
               {title}
             </span>
-            <span className="mt-1 block text-sm text-zinc-500 dark:text-zinc-400">{description}</span>
+            {description && (
+              <span className="mt-1 block text-sm text-zinc-500 dark:text-zinc-400">{description}</span>
+            )}
           </span>
           <span className="flex shrink-0 items-center gap-3">
-            <span
-              className={`text-zinc-900 tabular-nums dark:text-zinc-50 ${
-                prominent ? "text-xl font-extrabold" : "text-sm font-bold"
-              }`}
-            >
-              {formatRand(total)}
+            <span className="text-right">
+              {spent != null && (
+                <span className="block text-xs tabular-nums text-zinc-500 dark:text-zinc-400">
+                  Spent {formatRand(spent)}
+                </span>
+              )}
+              <span
+                className={`block text-zinc-900 tabular-nums dark:text-zinc-50 ${
+                  prominent ? "text-[0.9375rem] font-extrabold" : "text-sm font-bold"
+                }`}
+              >
+                {spent != null ? `Remaining ${formatRand(total)}` : formatRand(total)}
+              </span>
             </span>
             <ChevronDown
               size={16}
