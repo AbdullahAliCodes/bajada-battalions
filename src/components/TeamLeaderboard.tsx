@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Undo2 } from "lucide-react";
 import { formatRand } from "@/lib/format";
+import { recomputeTeam } from "@/lib/roster";
 import type { Team } from "@/types/auction";
 
 type TeamLeaderboardProps = {
@@ -12,8 +13,9 @@ type TeamLeaderboardProps = {
 
 export function TeamLeaderboard({ teams, onRelease }: TeamLeaderboardProps) {
   const [openId, setOpenId] = useState<string | null>(null);
-  const userTeam = teams.find((team) => team.isUser);
-  const opponents = [...teams]
+  const settled = teams.map((team) => recomputeTeam(team));
+  const userTeam = settled.find((team) => team.isUser);
+  const opponents = settled
     .filter((team) => !team.isUser)
     .sort((a, b) => b.remaining - a.remaining);
 
@@ -21,9 +23,12 @@ export function TeamLeaderboard({ teams, onRelease }: TeamLeaderboardProps) {
     <div className="space-y-4">
       {userTeam && (
         <section className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <h2 className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            Our roster
-          </h2>
+          <div className="flex items-start justify-between gap-4">
+            <h2 className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+              Our roster
+            </h2>
+            <TeamTotals team={userTeam} />
+          </div>
           <RosterList team={userTeam} onRelease={onRelease} />
         </section>
       )}
@@ -53,9 +58,7 @@ export function TeamLeaderboard({ teams, onRelease }: TeamLeaderboardProps) {
                       {team.spotsLeft} spots open
                     </span>
                   </span>
-                  <span className="text-sm font-semibold tabular-nums text-zinc-900 dark:text-zinc-50">
-                    {formatRand(team.remaining)}
-                  </span>
+                  <TeamTotals team={team} />
                 </button>
                 {open && <RosterList team={team} onRelease={onRelease} />}
               </li>
@@ -64,6 +67,19 @@ export function TeamLeaderboard({ teams, onRelease }: TeamLeaderboardProps) {
         </ul>
       </section>
     </div>
+  );
+}
+
+function TeamTotals({ team }: { team: Team }) {
+  return (
+    <span className="shrink-0 text-right">
+      <span className="block text-xs tabular-nums text-zinc-500 dark:text-zinc-400">
+        Spent {formatRand(team.spent)}
+      </span>
+      <span className="block text-sm font-bold tabular-nums text-zinc-900 dark:text-zinc-50">
+        Remaining {formatRand(team.remaining)}
+      </span>
+    </span>
   );
 }
 

@@ -7,6 +7,7 @@ import { USER_TEAM_NAME } from "@/lib/constants";
 import { formatRand } from "@/lib/format";
 
 type HeaderProps = {
+  spent: number;
   remaining: number;
   spotsLeft: number;
 };
@@ -18,7 +19,7 @@ type AuctionTabsProps = {
   onTabChange: (tab: AuctionTab) => void;
 };
 
-export function Header({ remaining, spotsLeft }: HeaderProps) {
+export function Header({ spent, remaining, spotsLeft }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200/80 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80">
       <div className="mx-auto max-w-4xl px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-5 sm:px-6 lg:px-8">
@@ -47,7 +48,10 @@ export function Header({ remaining, spotsLeft }: HeaderProps) {
 
         <div className="mt-6 flex items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 tabular-nums dark:text-zinc-400">
+              Spent {formatRand(spent)}
+            </p>
+            <p className="mt-2 text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
               Remaining
             </p>
             <p className="text-4xl font-extrabold tracking-tight text-zinc-900 tabular-nums dark:text-zinc-50">

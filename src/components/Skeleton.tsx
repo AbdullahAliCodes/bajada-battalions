@@ -48,6 +48,10 @@ export function AuctionSkeleton() {
           <div className="mt-6 flex items-end justify-between gap-4">
             <div>
               <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                Spent
+              </p>
+              <Skeleton className="mt-2 h-5 w-28 rounded-md" />
+              <p className="mt-2 text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                 Remaining
               </p>
               <Skeleton className="mt-2 h-10 w-40 rounded-md" />

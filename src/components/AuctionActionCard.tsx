@@ -150,7 +150,7 @@ export function AuctionActionCard({
             >
               {opponents.map((team) => (
                 <option key={team.id} value={team.id} disabled={team.spotsLeft <= 0}>
-                  {team.name} · {formatRand(team.remaining)} · {team.spotsLeft} left
+                  {team.name} · spent {formatRand(team.spent)} · remaining {formatRand(team.remaining)} · {team.spotsLeft} left
                 </option>
               ))}
             </select>

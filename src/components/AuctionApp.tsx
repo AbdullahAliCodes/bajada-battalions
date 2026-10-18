@@ -409,7 +409,11 @@ export function AuctionApp() {
 
   return (
     <div className="min-h-dvh bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
-      <Header remaining={userTeam.remaining} spotsLeft={userTeam.spotsLeft} />
+      <Header
+        spent={userTeam.spent}
+        remaining={userTeam.remaining}
+        spotsLeft={userTeam.spotsLeft}
+      />
 
       <div className="mx-auto max-w-4xl px-4 pt-6 pb-12 sm:px-6 lg:px-8">
         <TeamGrid
